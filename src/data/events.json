@@ -1,0 +1,98 @@
+[
+  {
+    "id": "event_first_day",
+    "name": "工作室的第一天",
+    "type": "TIMELINE",
+    "triggerCondition": {"month": 1, "day": 1},
+    "priority": 100,
+    "phases": [
+      {
+        "text": "你站在崭新的工作室门口，深吸一口气。这里将是梦开始的地方。",
+        "choices": [
+          {"text": "\"我们一定能做出伟大的游戏！\"", "effects": [{"type": "morale", "value": 10}]},
+          {"text": "\"先活下来再说吧...\"", "effects": [{"type": "funds", "value": 2000}]}
+        ]
+      }
+    ],
+    "effects": []
+  },
+  {
+    "id": "event_first_bug",
+    "name": "第一个严重Bug",
+    "type": "RANDOM",
+    "triggerCondition": {"month": 1, "day": 10, "probability": 0.8},
+    "priority": 50,
+    "phases": [
+      {
+        "text": "\"老板！出大事了！\" 程序员慌张地跑来——整个游戏场景渲染全黑了。",
+        "choices": [
+          {"text": "全员加班紧急修复", "effects": [{"type": "morale", "value": -10}, {"type": "card", "target": "card_debug", "value": 1}, {"type": "buff", "target": "buff_event_overwork", "value": 1, "duration": 1, "durationUnit": "week"}]},
+          {"text": "别慌，明天再看", "effects": [{"type": "morale", "value": 5}]}
+        ]
+      }
+    ],
+    "effects": []
+  },
+  {
+    "id": "event_license_freeze",
+    "name": "版号寒冬",
+    "type": "TIMELINE",
+    "triggerCondition": {"month": 2, "day": 1},
+    "priority": 100,
+    "phases": [
+      {
+        "text": "噼里啪啦网上炸了锅：国家新闻出版署暂停游戏版号审批。整个行业一片哀嚎。",
+        "speaker": "系统"
+      },
+      {
+        "text": "没有版号，游戏就无法上线盈利。工作室的前途变得不明朗...",
+        "choices": [
+          {"text": "趁这段时间专心打磨品质", "effects": [{"type": "morale", "value": -5}, {"type": "buff", "target": "buff_event_morale_high", "value": 1, "duration": 2, "durationUnit": "week"}]},
+          {"text": "考虑出海发行", "effects": [{"type": "funds", "value": -3000}, {"type": "reputation", "value": 5}]},
+          {"text": "缩减团队规模熬过去", "effects": [{"type": "funds", "value": 5000}, {"type": "morale", "value": -20}]}
+        ]
+      }
+    ],
+    "effects": []
+  },
+  {
+    "id": "event_esports_final",
+    "name": "电竞世界赛决赛",
+    "type": "RANDOM",
+    "triggerCondition": {"month": 2, "probability": 0.6},
+    "priority": 30,
+    "phases": [
+      {
+        "text": "今晚是S赛决赛，中国队杀入了总决赛！下班后好几个员工还留在工作室准备一起看比赛。",
+        "choices": [
+          {"text": "买零食和大家一起看", "effects": [{"type": "funds", "value": -200}, {"type": "morale", "value": 15}, {"type": "buff", "target": "buff_event_party_spirit", "value": 1, "duration": 1, "durationUnit": "week"}]},
+          {"text": "提醒大家别影响明天工作", "effects": [{"type": "morale", "value": -5}]}
+        ]
+      }
+    ],
+    "effects": []
+  },
+  {
+    "id": "event_investor_visit",
+    "name": "投资人来访",
+    "type": "RANDOM",
+    "triggerCondition": {"month": 3, "probability": 0.7, "minEmployees": 3},
+    "priority": 60,
+    "phases": [
+      {
+        "text": "一位天使投资人听说了你们的项目，想来看看。",
+        "speaker": "系统"
+      },
+      {
+        "text": "\"给我看看你们的Demo。\" 投资人推了推眼镜，目光锐利。",
+        "speaker": "投资人",
+        "choices": [
+          {"text": "自信展示，重点讲创新点", "effects": [{"type": "funds", "value": 20000}, {"type": "reputation", "value": 10}, {"type": "buff", "target": "buff_event_investor_confidence", "value": 1, "duration": 1, "durationUnit": "month"}]},
+          {"text": "谦虚表示还在打磨", "effects": [{"type": "funds", "value": 5000}, {"type": "reputation", "value": 3}]},
+          {"text": "委婉拒绝，保持独立", "effects": [{"type": "morale", "value": 10}]}
+        ]
+      }
+    ],
+    "effects": []
+  }
+]

@@ -1,0 +1,102 @@
+[
+  {
+    "id": "equip_iron_armor",
+    "name": "铁甲",
+    "description": "战斗开始时获得5点护甲",
+    "type": "ARMOR",
+    "rarity": "COMMON",
+    "buffId": "buff_equip_iron_armor",
+    "buffStacks": 5,
+    "price": 2000
+  },
+  {
+    "id": "equip_steel_plate",
+    "name": "钢板甲",
+    "description": "战斗开始时获得10点护甲",
+    "type": "ARMOR",
+    "rarity": "UNCOMMON",
+    "buffId": "buff_equip_steel_plate",
+    "buffStacks": 10,
+    "price": 4000
+  },
+  {
+    "id": "equip_diamond_shield",
+    "name": "钻石盾",
+    "description": "战斗开始时获得15点护甲",
+    "type": "ARMOR",
+    "rarity": "RARE",
+    "buffId": "buff_equip_diamond_shield",
+    "buffStacks": 15,
+    "price": 8000
+  },
+  {
+    "id": "equip_sharp_knife",
+    "name": "锋利小刀",
+    "description": "攻击伤害+1",
+    "type": "ATTACK",
+    "rarity": "COMMON",
+    "buffId": "buff_equip_sharp_knife",
+    "buffStacks": 1,
+    "price": 2000
+  },
+  {
+    "id": "equip_warrior_blade",
+    "name": "勇者之刃",
+    "description": "攻击伤害+2",
+    "type": "ATTACK",
+    "rarity": "UNCOMMON",
+    "buffId": "buff_equip_warrior_blade",
+    "buffStacks": 2,
+    "price": 4000
+  },
+  {
+    "id": "equip_legendary_sword",
+    "name": "传说之剑",
+    "description": "攻击伤害+4",
+    "type": "ATTACK",
+    "rarity": "RARE",
+    "buffId": "buff_equip_legendary_sword",
+    "buffStacks": 4,
+    "price": 8000
+  },
+  {
+    "id": "equip_herb_pouch",
+    "name": "草药包",
+    "description": "每回合恢复2点生命值",
+    "type": "RECOVERY",
+    "rarity": "COMMON",
+    "buffId": "buff_equip_herb_pouch",
+    "buffStacks": 2,
+    "price": 2000
+  },
+  {
+    "id": "equip_healing_crystal",
+    "name": "治愈水晶",
+    "description": "每回合恢复4点生命值",
+    "type": "RECOVERY",
+    "rarity": "UNCOMMON",
+    "buffId": "buff_equip_healing_crystal",
+    "buffStacks": 4,
+    "price": 4000
+  },
+  {
+    "id": "equip_energy_drink",
+    "name": "功能饮料",
+    "description": "最大能量+1",
+    "type": "ENERGY",
+    "rarity": "UNCOMMON",
+    "buffId": "buff_equip_energy_drink",
+    "buffStacks": 1,
+    "price": 4000
+  },
+  {
+    "id": "equip_coffee_machine",
+    "name": "咖啡机",
+    "description": "最大能量+1，每回合额外抽1张牌",
+    "type": "ENERGY",
+    "rarity": "RARE",
+    "buffId": "buff_equip_coffee_machine",
+    "buffStacks": 1,
+    "price": 8000
+  }
+]

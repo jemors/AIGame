@@ -1,0 +1,383 @@
+[
+  {
+    "id": "card_code_sprint",
+    "name": "代码冲刺",
+    "type": "ATTACK",
+    "rarity": "COMMON",
+    "cost": 1,
+    "effects": [{"type": "DAMAGE", "target": "ENEMY", "value": 6}],
+    "description": "造成6点伤害",
+    "tags": ["work", "coding"]
+  },
+  {
+    "id": "card_debug",
+    "name": "Debug",
+    "type": "ATTACK",
+    "rarity": "COMMON",
+    "cost": 1,
+    "effects": [{"type": "DAMAGE", "target": "ENEMY", "value": 8}],
+    "description": "精准定位Bug，造成8点伤害",
+    "tags": ["work", "coding", "debug"]
+  },
+  {
+    "id": "card_refactor",
+    "name": "重构代码",
+    "type": "ATTACK",
+    "rarity": "UNCOMMON",
+    "cost": 2,
+    "effects": [
+      {"type": "DAMAGE", "target": "ENEMY", "value": 10},
+      {"type": "DRAW", "target": "SELF", "value": 1}
+    ],
+    "description": "造成10点伤害，抽1张牌",
+    "tags": ["work", "coding", "refactor"]
+  },
+  {
+    "id": "card_hotfix",
+    "name": "紧急修复",
+    "type": "ATTACK",
+    "rarity": "COMMON",
+    "cost": 0,
+    "effects": [{"type": "DAMAGE", "target": "ENEMY", "value": 4}],
+    "description": "零成本快速修复，造成4点伤害",
+    "tags": ["work", "coding", "quick"]
+  },
+  {
+    "id": "card_algorithm",
+    "name": "算法优化",
+    "type": "ATTACK",
+    "rarity": "UNCOMMON",
+    "cost": 2,
+    "effects": [{"type": "DAMAGE", "target": "ENEMY", "value": 14}],
+    "description": "用精妙的算法解决问题，造成14点伤害",
+    "tags": ["work", "coding", "optimization"]
+  },
+  {
+    "id": "card_full_stack",
+    "name": "全栈出击",
+    "type": "ATTACK",
+    "rarity": "RARE",
+    "cost": 3,
+    "effects": [{"type": "DAMAGE", "target": "ALL_ENEMIES", "value": 10}],
+    "description": "对所有敌人造成10点伤害",
+    "tags": ["work", "coding"]
+  },
+  {
+    "id": "card_crunch",
+    "name": "加班赶工",
+    "type": "ATTACK",
+    "rarity": "COMMON",
+    "cost": 1,
+    "effects": [
+      {"type": "DAMAGE", "target": "ENEMY", "value": 10},
+      {"type": "DEBUFF", "target": "SELF", "value": 1, "buffId": "buff_fatigue"}
+    ],
+    "description": "造成10点伤害，获得1层疲劳",
+    "tags": ["work", "overtime"]
+  },
+  {
+    "id": "card_pair_programming",
+    "name": "结对编程",
+    "type": "ATTACK",
+    "rarity": "UNCOMMON",
+    "cost": 1,
+    "effects": [
+      {"type": "DAMAGE", "target": "ENEMY", "value": 5},
+      {"type": "BLOCK", "target": "SELF", "value": 5}
+    ],
+    "description": "造成5点伤害，获得5点护甲",
+    "tags": ["work", "coding", "teamwork"]
+  },
+  {
+    "id": "card_deadline_rush",
+    "name": "死线冲刺",
+    "type": "ATTACK",
+    "rarity": "RARE",
+    "cost": 2,
+    "effects": [{"type": "DAMAGE", "target": "ENEMY", "value": 20}],
+    "description": "背水一战！造成20点伤害",
+    "tags": ["work", "overtime", "desperate"],
+    "exhaust": true
+  },
+  {
+    "id": "card_unit_test",
+    "name": "单元测试",
+    "type": "ATTACK",
+    "rarity": "COMMON",
+    "cost": 1,
+    "effects": [
+      {"type": "DAMAGE", "target": "ENEMY", "value": 4},
+      {"type": "BLOCK", "target": "SELF", "value": 4}
+    ],
+    "description": "造成4点伤害，获得4点护甲",
+    "tags": ["work", "qa", "testing"]
+  },
+  {
+    "id": "card_code_review",
+    "name": "代码审查",
+    "type": "SKILL",
+    "rarity": "COMMON",
+    "cost": 1,
+    "effects": [{"type": "BLOCK", "target": "SELF", "value": 7}],
+    "description": "获得7点护甲",
+    "tags": ["teamwork", "qa"]
+  },
+  {
+    "id": "card_test_coverage",
+    "name": "测试覆盖",
+    "type": "SKILL",
+    "rarity": "COMMON",
+    "cost": 1,
+    "effects": [{"type": "BLOCK", "target": "SELF", "value": 5}],
+    "description": "获得5点护甲",
+    "tags": ["qa", "testing"]
+  },
+  {
+    "id": "card_visual_polish",
+    "name": "视觉打磨",
+    "type": "SKILL",
+    "rarity": "COMMON",
+    "cost": 1,
+    "effects": [
+      {"type": "BLOCK", "target": "SELF", "value": 4},
+      {"type": "DRAW", "target": "SELF", "value": 1}
+    ],
+    "description": "获得4点护甲，抽1张牌",
+    "tags": ["art", "polish"]
+  },
+  {
+    "id": "card_team_sync",
+    "name": "团队协作",
+    "type": "SKILL",
+    "rarity": "COMMON",
+    "cost": 1,
+    "effects": [{"type": "BLOCK", "target": "SELF", "value": 8}],
+    "description": "良好沟通带来的防御，获得8点护甲",
+    "tags": ["teamwork", "meeting"]
+  },
+  {
+    "id": "card_brainstorm",
+    "name": "头脑风暴",
+    "type": "SKILL",
+    "rarity": "UNCOMMON",
+    "cost": 1,
+    "effects": [{"type": "DRAW", "target": "SELF", "value": 3}],
+    "description": "灵感迸发！抽3张牌",
+    "tags": ["meeting", "creativity"]
+  },
+  {
+    "id": "card_risk_assessment",
+    "name": "风险评估",
+    "type": "SKILL",
+    "rarity": "UNCOMMON",
+    "cost": 1,
+    "effects": [
+      {"type": "BLOCK", "target": "SELF", "value": 10},
+      {"type": "DRAW", "target": "SELF", "value": 1}
+    ],
+    "description": "提前预判风险，获得10点护甲，抽1张牌",
+    "tags": ["planning", "qa"]
+  },
+  {
+    "id": "card_ui_design",
+    "name": "UI设计",
+    "type": "SKILL",
+    "rarity": "COMMON",
+    "cost": 1,
+    "effects": [
+      {"type": "BLOCK", "target": "SELF", "value": 6},
+      {"type": "BUFF", "target": "SELF", "value": 1, "buffId": "buff_inspired"}
+    ],
+    "description": "获得6点护甲和1层灵感",
+    "tags": ["art", "design"]
+  },
+  {
+    "id": "card_prototype",
+    "name": "快速原型",
+    "type": "SKILL",
+    "rarity": "UNCOMMON",
+    "cost": 0,
+    "effects": [
+      {"type": "BLOCK", "target": "SELF", "value": 3},
+      {"type": "DRAW", "target": "SELF", "value": 1}
+    ],
+    "description": "快速验证，获得3点护甲，抽1张牌",
+    "tags": ["work", "agile"]
+  },
+  {
+    "id": "card_tech_sharing",
+    "name": "技术分享",
+    "type": "SKILL",
+    "rarity": "UNCOMMON",
+    "cost": 2,
+    "effects": [
+      {"type": "BLOCK", "target": "SELF", "value": 12},
+      {"type": "BUFF", "target": "SELF", "value": 2, "buffId": "buff_strength"}
+    ],
+    "description": "获得12点护甲和2层力量",
+    "tags": ["teamwork", "growth"]
+  },
+  {
+    "id": "card_emergency_meeting",
+    "name": "紧急会议",
+    "type": "SKILL",
+    "rarity": "COMMON",
+    "cost": 0,
+    "effects": [{"type": "BLOCK", "target": "SELF", "value": 4}],
+    "description": "快速对齐，获得4点护甲",
+    "tags": ["meeting", "quick"]
+  },
+  {
+    "id": "card_daily_standup",
+    "name": "每日站会",
+    "type": "POWER",
+    "rarity": "UNCOMMON",
+    "cost": 1,
+    "effects": [{"type": "BUFF", "target": "SELF", "value": 1, "buffId": "buff_daily_draw"}],
+    "description": "每回合开始时额外抽1张牌",
+    "tags": ["meeting", "agile"]
+  },
+  {
+    "id": "card_ci_cd",
+    "name": "自动化流水线",
+    "type": "POWER",
+    "rarity": "RARE",
+    "cost": 2,
+    "effects": [{"type": "BUFF", "target": "SELF", "value": 3, "buffId": "buff_auto_block"}],
+    "description": "每回合开始时获得3点护甲",
+    "tags": ["work", "coding", "automation"]
+  },
+  {
+    "id": "card_agile_methodology",
+    "name": "敏捷开发",
+    "type": "POWER",
+    "rarity": "RARE",
+    "cost": 2,
+    "effects": [{"type": "BUFF", "target": "SELF", "value": 1, "buffId": "buff_energy_regen"}],
+    "description": "每回合获得1点额外能量",
+    "tags": ["planning", "agile"]
+  },
+  {
+    "id": "card_team_spirit",
+    "name": "团队精神",
+    "type": "POWER",
+    "rarity": "UNCOMMON",
+    "cost": 1,
+    "effects": [{"type": "BUFF", "target": "SELF", "value": 2, "buffId": "buff_strength"}],
+    "description": "获得2层力量（攻击牌伤害+2）",
+    "tags": ["teamwork"]
+  },
+  {
+    "id": "card_quality_first",
+    "name": "质量第一",
+    "type": "POWER",
+    "rarity": "UNCOMMON",
+    "cost": 1,
+    "effects": [{"type": "BUFF", "target": "SELF", "value": 2, "buffId": "buff_dexterity"}],
+    "description": "获得2层敏捷（技能牌护甲+2）",
+    "tags": ["qa"]
+  },
+  {
+    "id": "card_tech_debt",
+    "name": "技术债",
+    "type": "STATUS",
+    "rarity": "COMMON",
+    "cost": 0,
+    "effects": [],
+    "description": "无法打出。占据手牌位。",
+    "tags": ["negative"],
+    "unplayable": true
+  },
+  {
+    "id": "card_fatigue",
+    "name": "疲劳",
+    "type": "STATUS",
+    "rarity": "COMMON",
+    "cost": 0,
+    "effects": [],
+    "description": "无法打出。回合结束时受到2点伤害。",
+    "tags": ["negative", "fatigue"],
+    "unplayable": true,
+    "ethereal": true
+  },
+  {
+    "id": "card_scope_creep",
+    "name": "需求蔓延",
+    "type": "STATUS",
+    "rarity": "COMMON",
+    "cost": 0,
+    "effects": [],
+    "description": "无法打出。在手中时所有卡牌费用+1。",
+    "tags": ["negative", "scope_creep"],
+    "unplayable": true
+  },
+  {
+    "id": "card_communication_breakdown",
+    "name": "沟通不畅",
+    "type": "STATUS",
+    "rarity": "COMMON",
+    "cost": 0,
+    "effects": [],
+    "description": "无法打出。在手中时每回合少抽1张牌。",
+    "tags": ["negative", "communication"],
+    "unplayable": true
+  },
+  {
+    "id": "card_burnout",
+    "name": "倦怠",
+    "type": "STATUS",
+    "rarity": "UNCOMMON",
+    "cost": 0,
+    "effects": [],
+    "description": "无法打出。每回合能量-1。",
+    "tags": ["negative", "burnout"],
+    "unplayable": true
+  },
+  {
+    "id": "card_team_rest",
+    "name": "团队休息",
+    "type": "SKILL",
+    "rarity": "COMMON",
+    "cost": 1,
+    "effects": [{"type": "HEAL", "target": "SELF", "value": 5}],
+    "description": "恢复5点项目健康度",
+    "tags": ["rest", "heal"]
+  },
+  {
+    "id": "card_steady_progress",
+    "name": "稳步推进",
+    "type": "SKILL",
+    "rarity": "UNCOMMON",
+    "cost": 1,
+    "effects": [
+      {"type": "HEAL", "target": "SELF", "value": 3},
+      {"type": "BLOCK", "target": "SELF", "value": 5}
+    ],
+    "description": "恢复3点健康度，获得5点护甲",
+    "tags": ["heal", "defense"]
+  },
+  {
+    "id": "card_fortified_recovery",
+    "name": "坚固防线",
+    "type": "SKILL",
+    "rarity": "UNCOMMON",
+    "cost": 2,
+    "effects": [{"type": "HEAL", "target": "SELF", "value": 8}],
+    "description": "大幅恢复8点项目健康度",
+    "tags": ["heal", "recovery"]
+  },
+  {
+    "id": "card_team_rally",
+    "name": "团队鼓舞",
+    "type": "SKILL",
+    "rarity": "RARE",
+    "cost": 2,
+    "effects": [
+      {"type": "HEAL", "target": "SELF", "value": 4},
+      {"type": "BUFF", "target": "SELF", "value": 2, "buffId": "buff_dexterity"}
+    ],
+    "description": "恢复4点健康度，获得2层敏捷",
+    "tags": ["heal", "teamwork", "buff"],
+    "exhaust": true
+  }
+]

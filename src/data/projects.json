@@ -1,0 +1,19 @@
+[
+  {
+    "id": "project_indie_puzzle",
+    "name": "独立解谜游戏",
+    "genre": "PUZZLE",
+    "totalMonths": 3,
+    "requiredProgress": {
+      "programming": 60,
+      "art": 50,
+      "design": 55
+    },
+    "monthlyEnemies": [
+      ["enemy_bug_swarm"],
+      ["enemy_null_pointer", "enemy_scope_creep"],
+      ["enemy_tech_debt_giant"]
+    ],
+    "bossEnemies": ["enemy_tech_debt_giant", "enemy_tech_debt_giant", "enemy_tech_debt_giant"]
+  }
+]

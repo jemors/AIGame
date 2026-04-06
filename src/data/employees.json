@@ -1,0 +1,132 @@
+[
+  {
+    "id": "emp_zhang_wei",
+    "name": "张伟",
+    "role": "PROGRAMMER",
+    "rarity": 3,
+    "baseStats": {
+      "coding": 65, "art": 15, "design": 30, "creativity": 45,
+      "stamina": 80, "maxStamina": 80, "loyalty": 60, "morale": 70
+    },
+    "traits": [
+      {"id": "trait_night_owl", "name": "夜猫子", "description": "晚间工作效率+30%，但白天精力恢复慢", "hidden": false}
+    ],
+    "cardIds": ["card_code_sprint", "card_debug", "card_code_review"],
+    "salary": 8000,
+    "bio": "科班出身的程序员，擅长后端开发，经常熬夜写代码。"
+  },
+  {
+    "id": "emp_li_mei",
+    "name": "李美",
+    "role": "ARTIST",
+    "rarity": 3,
+    "baseStats": {
+      "coding": 10, "art": 70, "design": 50, "creativity": 65,
+      "stamina": 70, "maxStamina": 70, "loyalty": 65, "morale": 75
+    },
+    "traits": [
+      {"id": "trait_perfectionist", "name": "完美主义者", "description": "美术产出品质更高，但耗时更长", "hidden": false}
+    ],
+    "cardIds": ["card_visual_polish", "card_ui_design", "card_test_coverage"],
+    "salary": 7000,
+    "bio": "美院毕业，对画面有极高追求，最爱的游戏是《风之旅人》。"
+  },
+  {
+    "id": "emp_wang_hao",
+    "name": "王浩",
+    "role": "DESIGNER",
+    "rarity": 3,
+    "baseStats": {
+      "coding": 25, "art": 20, "design": 70, "creativity": 70,
+      "stamina": 75, "maxStamina": 75, "loyalty": 55, "morale": 80
+    },
+    "traits": [
+      {"id": "trait_idea_machine", "name": "点子王", "description": "头脑风暴时有概率产出额外创意卡牌", "hidden": false}
+    ],
+    "cardIds": ["card_brainstorm", "card_team_sync", "card_prototype"],
+    "salary": 10000,
+    "bio": "自称\"游戏设计鬼才\"，灵感无穷但执行力有待提升。"
+  },
+  {
+    "id": "emp_chen_jing",
+    "name": "陈静",
+    "role": "PROGRAMMER",
+    "rarity": 4,
+    "baseStats": {
+      "coding": 80, "art": 10, "design": 35, "creativity": 50,
+      "stamina": 65, "maxStamina": 65, "loyalty": 70, "morale": 60
+    },
+    "traits": [
+      {"id": "trait_architect", "name": "架构师", "description": "重构类卡牌效果+50%", "hidden": false},
+      {"id": "trait_introvert", "name": "社恐", "description": "团建时士气提升减半", "hidden": true}
+    ],
+    "cardIds": ["card_refactor", "card_algorithm", "card_ci_cd", "card_code_review"],
+    "salary": 12000,
+    "bio": "技术大牛，代码洁癖严重，开会就犯困。"
+  },
+  {
+    "id": "emp_zhao_peng",
+    "name": "赵鹏",
+    "role": "QA",
+    "rarity": 2,
+    "baseStats": {
+      "coding": 35, "art": 10, "design": 25, "creativity": 30,
+      "stamina": 85, "maxStamina": 85, "loyalty": 75, "morale": 65
+    },
+    "traits": [
+      {"id": "trait_eagle_eye", "name": "火眼金睛", "description": "单元测试和代码审查卡牌效果+3", "hidden": false}
+    ],
+    "cardIds": ["card_unit_test", "card_test_coverage", "card_risk_assessment"],
+    "salary": 8000,
+    "bio": "应届毕业生，测试工作认真负责，发现Bug的效率惊人。"
+  },
+  {
+    "id": "emp_liu_xin",
+    "name": "刘欣",
+    "role": "ARTIST",
+    "rarity": 2,
+    "baseStats": {
+      "coding": 15, "art": 55, "design": 40, "creativity": 60,
+      "stamina": 75, "maxStamina": 75, "loyalty": 50, "morale": 80
+    },
+    "traits": [
+      {"id": "trait_fast_learner", "name": "学习能力强", "description": "经验获取速度+50%", "hidden": false}
+    ],
+    "cardIds": ["card_visual_polish", "card_prototype", "card_emergency_meeting"],
+    "salary": 7000,
+    "bio": "自学成才的插画师，虽然基本功一般但进步飞快。"
+  },
+  {
+    "id": "emp_sun_lei",
+    "name": "孙磊",
+    "role": "PROGRAMMER",
+    "rarity": 2,
+    "baseStats": {
+      "coding": 50, "art": 5, "design": 20, "creativity": 35,
+      "stamina": 90, "maxStamina": 90, "loyalty": 80, "morale": 70
+    },
+    "traits": [
+      {"id": "trait_workhorse", "name": "铁人", "description": "加班时不受士气惩罚", "hidden": false}
+    ],
+    "cardIds": ["card_code_sprint", "card_hotfix", "card_crunch"],
+    "salary": 9000,
+    "bio": "能吃苦的老实人，代码风格朴实但产出稳定。"
+  },
+  {
+    "id": "emp_yang_fan",
+    "name": "杨帆",
+    "role": "DESIGNER",
+    "rarity": 4,
+    "baseStats": {
+      "coding": 30, "art": 35, "design": 80, "creativity": 85,
+      "stamina": 60, "maxStamina": 60, "loyalty": 45, "morale": 90
+    },
+    "traits": [
+      {"id": "trait_visionary", "name": "远见者", "description": "能力牌费用-1（最少0）", "hidden": false},
+      {"id": "trait_wanderlust", "name": "不安分", "description": "忠诚度低于30时有概率离职", "hidden": true}
+    ],
+    "cardIds": ["card_brainstorm", "card_agile_methodology", "card_daily_standup", "card_team_spirit"],
+    "salary": 11000,
+    "bio": "行业资深策划，眼光独到但自视甚高，需要好好维护关系。"
+  }
+]

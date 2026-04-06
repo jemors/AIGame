@@ -1,0 +1,82 @@
+[
+  {
+    "id": "item_health_potion",
+    "name": "急救包",
+    "description": "恢复15点项目健康度",
+    "icon": "🩹",
+    "rarity": "COMMON",
+    "price": 500,
+    "effects": [{ "type": "HEAL_HP", "value": 15 }],
+    "maxStack": 5
+  },
+  {
+    "id": "item_large_health_potion",
+    "name": "高级急救包",
+    "description": "恢复30点项目健康度",
+    "icon": "💊",
+    "rarity": "UNCOMMON",
+    "price": 1200,
+    "effects": [{ "type": "HEAL_HP", "value": 30 }],
+    "maxStack": 3
+  },
+  {
+    "id": "item_energy_bar",
+    "name": "能量棒",
+    "description": "全员恢复25点体力",
+    "icon": "🍫",
+    "rarity": "COMMON",
+    "price": 400,
+    "effects": [{ "type": "RESTORE_STAMINA", "value": 25 }],
+    "maxStack": 5
+  },
+  {
+    "id": "item_premium_coffee",
+    "name": "精品咖啡",
+    "description": "全员恢复50点体力",
+    "icon": "☕",
+    "rarity": "UNCOMMON",
+    "price": 1000,
+    "effects": [{ "type": "RESTORE_STAMINA", "value": 50 }],
+    "maxStack": 3
+  },
+  {
+    "id": "item_shield_scroll",
+    "name": "防护卷轴",
+    "description": "下次战斗开始时获得20点护甲",
+    "icon": "🛡️",
+    "rarity": "UNCOMMON",
+    "price": 800,
+    "effects": [{ "type": "ADD_BLOCK", "value": 20 }],
+    "maxStack": 3
+  },
+  {
+    "id": "item_morale_boost",
+    "name": "激励演讲稿",
+    "description": "全员士气+15",
+    "icon": "📣",
+    "rarity": "COMMON",
+    "price": 600,
+    "effects": [{ "type": "GAIN_BUFF", "value": 15, "buffId": "buff_morale_boost_item" }],
+    "maxStack": 3
+  },
+  {
+    "id": "item_debug_toolkit",
+    "name": "调试工具箱",
+    "description": "移除一个负面效果",
+    "icon": "🔧",
+    "rarity": "RARE",
+    "price": 1500,
+    "effects": [{ "type": "REMOVE_DEBUFF", "value": 1 }],
+    "maxStack": 2
+  },
+  {
+    "id": "item_inspiration_orb",
+    "name": "灵感之球",
+    "description": "全员创意+20，品质进度+5",
+    "icon": "💡",
+    "rarity": "RARE",
+    "price": 2000,
+    "effects": [{ "type": "GAIN_BUFF", "value": 20, "buffId": "buff_inspiration_item" }],
+    "maxStack": 2
+  }
+]

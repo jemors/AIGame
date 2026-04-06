@@ -1,0 +1,384 @@
+[
+  {
+    "id": "buff_strength",
+    "name": "力量",
+    "description": "攻击牌伤害+{stacks}",
+    "type": "POSITIVE",
+    "duration": -1,
+    "stackable": true,
+    "maxStacks": 99,
+    "effects": [{"trigger": "ON_CARD_PLAY", "modifier": "damage_add", "value": 1, "condition": "card.type === 'ATTACK'"}],
+    "hidden": false
+  },
+  {
+    "id": "buff_dexterity",
+    "name": "敏捷",
+    "description": "技能牌护甲+{stacks}",
+    "type": "POSITIVE",
+    "duration": -1,
+    "stackable": true,
+    "maxStacks": 99,
+    "effects": [{"trigger": "ON_CARD_PLAY", "modifier": "block_add", "value": 1, "condition": "card.type === 'SKILL'"}],
+    "hidden": false
+  },
+  {
+    "id": "buff_vulnerable",
+    "name": "易伤",
+    "description": "受到的伤害增加50%",
+    "type": "NEGATIVE",
+    "duration": 3,
+    "stackable": true,
+    "maxStacks": 99,
+    "effects": [{"trigger": "PASSIVE", "modifier": "damage_taken_mult", "value": 1.5}],
+    "hidden": false
+  },
+  {
+    "id": "buff_weak",
+    "name": "虚弱",
+    "description": "造成的伤害减少25%",
+    "type": "NEGATIVE",
+    "duration": 3,
+    "stackable": true,
+    "maxStacks": 99,
+    "effects": [{"trigger": "PASSIVE", "modifier": "damage_dealt_mult", "value": 0.75}],
+    "hidden": false
+  },
+  {
+    "id": "buff_fatigue",
+    "name": "疲劳",
+    "description": "回合结束时受到{stacks}点伤害",
+    "type": "NEGATIVE",
+    "duration": -1,
+    "stackable": true,
+    "maxStacks": 10,
+    "effects": [{"trigger": "ON_TURN_END", "modifier": "self_damage", "value": 1}],
+    "hidden": false
+  },
+  {
+    "id": "buff_inspired",
+    "name": "灵感",
+    "description": "下一张攻击牌伤害翻倍",
+    "type": "POSITIVE",
+    "duration": 1,
+    "stackable": false,
+    "maxStacks": 1,
+    "effects": [{"trigger": "ON_CARD_PLAY", "modifier": "damage_mult", "value": 2, "condition": "card.type === 'ATTACK'"}],
+    "hidden": false
+  },
+  {
+    "id": "buff_daily_draw",
+    "name": "每日站会",
+    "description": "每回合开始额外抽{stacks}张牌",
+    "type": "POSITIVE",
+    "duration": -1,
+    "stackable": true,
+    "maxStacks": 3,
+    "effects": [{"trigger": "ON_TURN_START", "modifier": "draw_add", "value": 1}],
+    "hidden": false
+  },
+  {
+    "id": "buff_auto_block",
+    "name": "自动化流水线",
+    "description": "每回合开始获得{stacks}点护甲",
+    "type": "POSITIVE",
+    "duration": -1,
+    "stackable": true,
+    "maxStacks": 20,
+    "effects": [{"trigger": "ON_TURN_START", "modifier": "auto_block", "value": 1}],
+    "hidden": false
+  },
+  {
+    "id": "buff_energy_regen",
+    "name": "敏捷开发",
+    "description": "每回合获得{stacks}点额外能量",
+    "type": "POSITIVE",
+    "duration": -1,
+    "stackable": true,
+    "maxStacks": 3,
+    "effects": [{"trigger": "ON_TURN_START", "modifier": "energy_add", "value": 1}],
+    "hidden": false
+  },
+  {
+    "id": "buff_team_cohesion",
+    "name": "团队凝聚力",
+    "description": "每回合开始获得2点护甲",
+    "type": "POSITIVE",
+    "duration": 5,
+    "stackable": false,
+    "maxStacks": 1,
+    "effects": [{"trigger": "ON_TURN_START", "modifier": "auto_block", "value": 2}],
+    "hidden": false
+  },
+  {
+    "id": "buff_caotai",
+    "name": "草台班子",
+    "description": "应届生组成的团队有着独特的韧性。版号寒冬时员工自发维持工作室，但效率降低30%。",
+    "type": "HIDDEN",
+    "duration": -1,
+    "stackable": false,
+    "maxStacks": 1,
+    "effects": [{"trigger": "PASSIVE", "modifier": "efficiency_mult", "value": 0.7}],
+    "hidden": true,
+    "revealCondition": "event_license_freeze"
+  },
+
+  {
+    "id": "buff_equip_iron_armor",
+    "name": "铁甲",
+    "description": "战斗开始获得{stacks}点护甲",
+    "type": "POSITIVE",
+    "duration": -1,
+    "stackable": true,
+    "maxStacks": 99,
+    "effects": [{"trigger": "ON_COMBAT_START", "modifier": "initial_block", "value": 1}],
+    "hidden": false
+  },
+  {
+    "id": "buff_equip_steel_plate",
+    "name": "钢板甲",
+    "description": "战斗开始获得{stacks}点护甲",
+    "type": "POSITIVE",
+    "duration": -1,
+    "stackable": true,
+    "maxStacks": 99,
+    "effects": [{"trigger": "ON_COMBAT_START", "modifier": "initial_block", "value": 1}],
+    "hidden": false
+  },
+  {
+    "id": "buff_equip_diamond_shield",
+    "name": "钻石盾",
+    "description": "战斗开始获得{stacks}点护甲",
+    "type": "POSITIVE",
+    "duration": -1,
+    "stackable": true,
+    "maxStacks": 99,
+    "effects": [{"trigger": "ON_COMBAT_START", "modifier": "initial_block", "value": 1}],
+    "hidden": false
+  },
+  {
+    "id": "buff_equip_sharp_knife",
+    "name": "锋利小刀",
+    "description": "攻击伤害+{stacks}",
+    "type": "POSITIVE",
+    "duration": -1,
+    "stackable": true,
+    "maxStacks": 99,
+    "effects": [{"trigger": "ON_CARD_PLAY", "modifier": "damage_add", "value": 1, "condition": "card.type === 'ATTACK'"}],
+    "hidden": false
+  },
+  {
+    "id": "buff_equip_warrior_blade",
+    "name": "勇者之刃",
+    "description": "攻击伤害+{stacks}",
+    "type": "POSITIVE",
+    "duration": -1,
+    "stackable": true,
+    "maxStacks": 99,
+    "effects": [{"trigger": "ON_CARD_PLAY", "modifier": "damage_add", "value": 1, "condition": "card.type === 'ATTACK'"}],
+    "hidden": false
+  },
+  {
+    "id": "buff_equip_legendary_sword",
+    "name": "传说之剑",
+    "description": "攻击伤害+{stacks}",
+    "type": "POSITIVE",
+    "duration": -1,
+    "stackable": true,
+    "maxStacks": 99,
+    "effects": [{"trigger": "ON_CARD_PLAY", "modifier": "damage_add", "value": 1, "condition": "card.type === 'ATTACK'"}],
+    "hidden": false
+  },
+  {
+    "id": "buff_equip_herb_pouch",
+    "name": "草药包",
+    "description": "每回合恢复{stacks}点生命值",
+    "type": "POSITIVE",
+    "duration": -1,
+    "stackable": true,
+    "maxStacks": 20,
+    "effects": [{"trigger": "ON_TURN_START", "modifier": "heal", "value": 1}],
+    "hidden": false
+  },
+  {
+    "id": "buff_equip_healing_crystal",
+    "name": "治愈水晶",
+    "description": "每回合恢复{stacks}点生命值",
+    "type": "POSITIVE",
+    "duration": -1,
+    "stackable": true,
+    "maxStacks": 20,
+    "effects": [{"trigger": "ON_TURN_START", "modifier": "heal", "value": 1}],
+    "hidden": false
+  },
+  {
+    "id": "buff_equip_energy_drink",
+    "name": "功能饮料",
+    "description": "最大能量+{stacks}",
+    "type": "POSITIVE",
+    "duration": -1,
+    "stackable": true,
+    "maxStacks": 5,
+    "effects": [{"trigger": "ON_COMBAT_START", "modifier": "max_energy_add", "value": 1}],
+    "hidden": false
+  },
+  {
+    "id": "buff_equip_coffee_machine",
+    "name": "咖啡机",
+    "description": "最大能量+{stacks}，每回合额外抽{stacks}张牌",
+    "type": "POSITIVE",
+    "duration": -1,
+    "stackable": true,
+    "maxStacks": 3,
+    "effects": [
+      {"trigger": "ON_COMBAT_START", "modifier": "max_energy_add", "value": 1},
+      {"trigger": "ON_TURN_START", "modifier": "draw_add", "value": 1}
+    ],
+    "hidden": false
+  },
+
+  {
+    "id": "buff_boss_precision",
+    "name": "精准打击",
+    "description": "攻击伤害+{stacks}",
+    "type": "POSITIVE",
+    "duration": -1,
+    "stackable": true,
+    "maxStacks": 10,
+    "effects": [{"trigger": "ON_CARD_PLAY", "modifier": "damage_add", "value": 1, "condition": "card.type === 'ATTACK'"}],
+    "hidden": false
+  },
+  {
+    "id": "buff_boss_resilience",
+    "name": "坚韧不拔",
+    "description": "每回合开始获得{stacks}点护甲",
+    "type": "POSITIVE",
+    "duration": -1,
+    "stackable": true,
+    "maxStacks": 20,
+    "effects": [{"trigger": "ON_TURN_START", "modifier": "auto_block", "value": 3}],
+    "hidden": false
+  },
+  {
+    "id": "buff_boss_haste",
+    "name": "加速迭代",
+    "description": "每回合获得{stacks}点额外能量",
+    "type": "POSITIVE",
+    "duration": -1,
+    "stackable": true,
+    "maxStacks": 3,
+    "effects": [{"trigger": "ON_TURN_START", "modifier": "energy_add", "value": 1}],
+    "hidden": false
+  },
+  {
+    "id": "buff_boss_insight",
+    "name": "洞察力",
+    "description": "每回合额外抽{stacks}张牌",
+    "type": "POSITIVE",
+    "duration": -1,
+    "stackable": true,
+    "maxStacks": 3,
+    "effects": [{"trigger": "ON_TURN_START", "modifier": "draw_add", "value": 1}],
+    "hidden": false
+  },
+  {
+    "id": "buff_boss_vitality",
+    "name": "生命力",
+    "description": "每回合恢复{stacks}点生命值",
+    "type": "POSITIVE",
+    "duration": -1,
+    "stackable": true,
+    "maxStacks": 10,
+    "effects": [{"trigger": "ON_TURN_START", "modifier": "heal", "value": 2}],
+    "hidden": false
+  },
+  {
+    "id": "buff_boss_focus",
+    "name": "专注",
+    "description": "力量+{stacks}",
+    "type": "POSITIVE",
+    "duration": -1,
+    "stackable": true,
+    "maxStacks": 10,
+    "effects": [{"trigger": "ON_CARD_PLAY", "modifier": "damage_add", "value": 1, "condition": "card.type === 'ATTACK'"}],
+    "hidden": false
+  },
+
+  {
+    "id": "buff_event_morale_high",
+    "name": "士气高昂",
+    "description": "每回合开始获得{stacks}点护甲",
+    "type": "POSITIVE",
+    "duration": -1,
+    "stackable": true,
+    "maxStacks": 5,
+    "effects": [{"trigger": "ON_TURN_START", "modifier": "auto_block", "value": 2}],
+    "hidden": false
+  },
+  {
+    "id": "buff_event_overwork",
+    "name": "过度加班",
+    "description": "每回合结束受到{stacks}点伤害",
+    "type": "NEGATIVE",
+    "duration": -1,
+    "stackable": true,
+    "maxStacks": 5,
+    "effects": [{"trigger": "ON_TURN_END", "modifier": "self_damage", "value": 1}],
+    "hidden": false
+  },
+  {
+    "id": "buff_event_investor_confidence",
+    "name": "投资人信心",
+    "description": "攻击伤害+{stacks}",
+    "type": "POSITIVE",
+    "duration": -1,
+    "stackable": true,
+    "maxStacks": 10,
+    "effects": [{"trigger": "ON_CARD_PLAY", "modifier": "damage_add", "value": 2, "condition": "card.type === 'ATTACK'"}],
+    "hidden": false
+  },
+  {
+    "id": "buff_event_party_spirit",
+    "name": "团建精神",
+    "description": "每回合获得{stacks}点额外能量",
+    "type": "POSITIVE",
+    "duration": -1,
+    "stackable": true,
+    "maxStacks": 3,
+    "effects": [{"trigger": "ON_TURN_START", "modifier": "energy_add", "value": 1}],
+    "hidden": false
+  },
+
+  {
+    "id": "buff_progress_programming",
+    "name": "代码完备",
+    "description": "编程进度已完成！攻击伤害+{stacks}",
+    "type": "POSITIVE",
+    "duration": -1,
+    "stackable": true,
+    "maxStacks": 10,
+    "effects": [{"trigger": "ON_CARD_PLAY", "modifier": "damage_add", "value": 2, "condition": "card.type === 'ATTACK'"}],
+    "hidden": false
+  },
+  {
+    "id": "buff_progress_art",
+    "name": "视觉精良",
+    "description": "美术进度已完成！每回合开始获得{stacks}点护甲",
+    "type": "POSITIVE",
+    "duration": -1,
+    "stackable": true,
+    "maxStacks": 10,
+    "effects": [{"trigger": "ON_TURN_START", "modifier": "auto_block", "value": 2}],
+    "hidden": false
+  },
+  {
+    "id": "buff_progress_design",
+    "name": "设计成熟",
+    "description": "策划进度已完成！每回合额外抽{stacks}张牌",
+    "type": "POSITIVE",
+    "duration": -1,
+    "stackable": true,
+    "maxStacks": 3,
+    "effects": [{"trigger": "ON_TURN_START", "modifier": "draw_add", "value": 1}],
+    "hidden": false
+  }
+]

@@ -1,0 +1,10 @@
+{
+  "rewardBuffIds": [
+    "buff_boss_precision",
+    "buff_boss_resilience",
+    "buff_boss_haste",
+    "buff_boss_insight",
+    "buff_boss_vitality",
+    "buff_boss_focus"
+  ]
+}
