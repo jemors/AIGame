@@ -18,6 +18,12 @@ fi
 echo "[codex] Running typecheck"
 npm run typecheck
 
+echo "[codex] Running lint"
+npm run lint
+
+echo "[codex] Running format check"
+npm run format:check
+
 echo "[codex] Running build"
 npm run build
 

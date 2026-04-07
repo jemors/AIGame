@@ -56,7 +56,7 @@ export class EventSystem {
     const selected = candidates[0];
 
     // 标记为已触发
-    kernel.dispatch(s => {
+    kernel.dispatch((s) => {
       s.triggeredEvents.push(selected.id);
     });
 
@@ -73,23 +73,24 @@ export class EventSystem {
           kernel.modifyFunds(effect.value);
           break;
         case 'morale':
-          kernel.dispatch(s => {
-            s.studio.environment.morale = Math.max(0, Math.min(100,
-              s.studio.environment.morale + effect.value));
+          kernel.dispatch((s) => {
+            s.studio.environment.morale = Math.max(
+              0,
+              Math.min(100, s.studio.environment.morale + effect.value),
+            );
             for (const emp of s.employees) {
               emp.stats.morale = Math.max(0, Math.min(100, emp.stats.morale + effect.value));
             }
           });
           break;
         case 'reputation':
-          kernel.dispatch(s => {
-            s.studio.reputation = Math.max(0, Math.min(100,
-              s.studio.reputation + effect.value));
+          kernel.dispatch((s) => {
+            s.studio.reputation = Math.max(0, Math.min(100, s.studio.reputation + effect.value));
           });
           break;
         case 'buff':
           if (effect.target) {
-            kernel.dispatch(s => {
+            kernel.dispatch((s) => {
               // 计算大地图持续buff的过期全局周数
               let expiresAtGlobalWeek: number | undefined;
               if (effect.duration && effect.durationUnit) {
@@ -103,12 +104,15 @@ export class EventSystem {
                 }
               }
 
-              const existing = s.buffs.find(b => b.dataId === effect.target);
+              const existing = s.buffs.find((b) => b.dataId === effect.target);
               if (existing) {
                 existing.stacks += effect.value;
                 // 如果新的持续时间更长，更新过期时间
                 if (expiresAtGlobalWeek !== undefined) {
-                  if (!existing.expiresAtGlobalWeek || expiresAtGlobalWeek > existing.expiresAtGlobalWeek) {
+                  if (
+                    !existing.expiresAtGlobalWeek ||
+                    expiresAtGlobalWeek > existing.expiresAtGlobalWeek
+                  ) {
                     existing.expiresAtGlobalWeek = expiresAtGlobalWeek;
                   }
                 }
@@ -128,7 +132,7 @@ export class EventSystem {
         case 'card':
           if (effect.target) {
             const rng = kernel.getRng();
-            kernel.dispatch(s => {
+            kernel.dispatch((s) => {
               for (let i = 0; i < effect.value; i++) {
                 s.deck.push({
                   uid: `${effect.target}_evt_${Date.now()}_${rng.nextInt(100, 999)}`,

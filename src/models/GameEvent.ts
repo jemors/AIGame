@@ -7,9 +7,9 @@ export interface EventChoice {
 
 export interface EventEffect {
   type: 'funds' | 'morale' | 'reputation' | 'buff' | 'card' | 'employee_stat';
-  target?: string;       // buffId / cardId / employeeId
+  target?: string; // buffId / cardId / employeeId
   value: number;
-  duration?: number;           // buff 持续时长（配合 durationUnit）
+  duration?: number; // buff 持续时长（配合 durationUnit）
   durationUnit?: 'week' | 'month'; // 持续单位（默认为永久）
 }
 
@@ -24,8 +24,8 @@ export interface GameEventData {
   name: string;
   type: EventType;
   triggerCondition: {
-    month?: number;      // 第几个月触发（项目内）
-    day?: number;        // 第几天
+    month?: number; // 第几个月触发（项目内）
+    day?: number; // 第几天
     minFunds?: number;
     maxFunds?: number;
     minEmployees?: number;

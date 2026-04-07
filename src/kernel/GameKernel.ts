@@ -63,17 +63,17 @@ export class GameKernel {
     items?: ItemData[];
     bossRewardBuffIds?: string[];
   }): void {
-    data.cards.forEach(c => this.dataStore.cards.set(c.id, c));
-    data.employees.forEach(e => this.dataStore.employees.set(e.id, e));
-    data.enemies.forEach(e => this.dataStore.enemies.set(e.id, e));
-    data.buffs.forEach(b => this.dataStore.buffs.set(b.id, b));
+    data.cards.forEach((c) => this.dataStore.cards.set(c.id, c));
+    data.employees.forEach((e) => this.dataStore.employees.set(e.id, e));
+    data.enemies.forEach((e) => this.dataStore.enemies.set(e.id, e));
+    data.buffs.forEach((b) => this.dataStore.buffs.set(b.id, b));
     this.dataStore.events = data.events;
-    data.projects.forEach(p => this.dataStore.projects.set(p.id, p));
+    data.projects.forEach((p) => this.dataStore.projects.set(p.id, p));
     if (data.equipments) {
-      data.equipments.forEach(eq => this.dataStore.equipments.set(eq.id, eq));
+      data.equipments.forEach((eq) => this.dataStore.equipments.set(eq.id, eq));
     }
     if (data.items) {
-      data.items.forEach(it => this.dataStore.items.set(it.id, it));
+      data.items.forEach((it) => this.dataStore.items.set(it.id, it));
     }
     if (data.bossRewardBuffIds) {
       this.dataStore.bossRewardBuffIds = data.bossRewardBuffIds;
@@ -105,7 +105,7 @@ export class GameKernel {
     this.rng = new RandomSeed(seed);
     this.state = createInitialState(seed, difficulty);
 
-    this.dispatch(s => {
+    this.dispatch((s) => {
       s.studio.name = studioName;
       s.phase = GamePhase.SETUP;
 
@@ -151,7 +151,7 @@ export class GameKernel {
     const pData = this.dataStore.projects.get(projectId);
     if (!pData) return;
 
-    this.dispatch(s => {
+    this.dispatch((s) => {
       s.project = {
         dataId: projectId,
         name: customName || pData.name,
@@ -183,7 +183,7 @@ export class GameKernel {
 
   transition(nextPhase: GamePhase): void {
     const prevPhase = this.state.phase;
-    this.dispatch(s => {
+    this.dispatch((s) => {
       s.phase = nextPhase;
     });
     eventBus.emit(Events.PHASE_CHANGED, nextPhase, prevPhase);
@@ -203,10 +203,14 @@ export class GameKernel {
   advanceTimeSlot(): void {
     const current = this.state.daily.currentSlot;
     if (current === TimeSlot.MORNING) {
-      this.dispatch(s => { s.daily.currentSlot = TimeSlot.AFTERNOON; });
+      this.dispatch((s) => {
+        s.daily.currentSlot = TimeSlot.AFTERNOON;
+      });
       eventBus.emit(Events.TIME_SLOT_CHANGED, TimeSlot.AFTERNOON);
     } else if (current === TimeSlot.AFTERNOON) {
-      this.dispatch(s => { s.daily.currentSlot = TimeSlot.EVENING; });
+      this.dispatch((s) => {
+        s.daily.currentSlot = TimeSlot.EVENING;
+      });
       eventBus.emit(Events.TIME_SLOT_CHANGED, TimeSlot.EVENING);
     } else {
       // 晚间结束 → 日终结算
@@ -220,7 +224,7 @@ export class GameKernel {
 
     eventBus.emit(Events.DAY_ENDED);
 
-    this.dispatch(s => {
+    this.dispatch((s) => {
       s.stats.totalDays++;
       s.daily.currentDay++;
       s.daily.activitiesThisDay = [];
@@ -237,7 +241,7 @@ export class GameKernel {
       const newWeek = s.daily.currentWeek;
       if (newWeek !== oldWeek && s.project) {
         const currentGlobalWeek = (s.project.currentMonth - 1) * 4 + newWeek;
-        s.buffs = s.buffs.filter(b => {
+        s.buffs = s.buffs.filter((b) => {
           if (b.expiresAtGlobalWeek === undefined) return true;
           return currentGlobalWeek < b.expiresAtGlobalWeek;
         });
@@ -247,7 +251,7 @@ export class GameKernel {
     // 检查周末边界：第7/14/21天结束时触发每周战斗
     if (oldDay === 7 || oldDay === 14 || oldDay === 21) {
       const weekNumber = this.getWeekForDay(oldDay);
-      this.dispatch(s => {
+      this.dispatch((s) => {
         s.combatContext = { isBossFight: false, isFinalBoss: false, weekNumber };
       });
       eventBus.emit(Events.WEEK_ENDED, weekNumber);
@@ -264,7 +268,7 @@ export class GameKernel {
   // --- 进入战斗 ---
 
   startCombat(): void {
-    this.dispatch(s => {
+    this.dispatch((s) => {
       s.stats.totalCombats++;
     });
     this.transition(GamePhase.COMBAT);
@@ -274,7 +278,7 @@ export class GameKernel {
   // Boss战入口（从 MonthEndScreen 调用）
   startBossCombat(): void {
     const isFinalBoss = this.state.publishMarked;
-    this.dispatch(s => {
+    this.dispatch((s) => {
       s.combatContext = { isBossFight: true, isFinalBoss, weekNumber: 4 };
     });
     this.startCombat();
@@ -287,7 +291,7 @@ export class GameKernel {
     eventBus.emit(Events.COMBAT_ENDED, victory);
 
     // 记录胜负结果 + 清除战斗上下文
-    this.dispatch(s => {
+    this.dispatch((s) => {
       s.lastCombatVictory = victory;
       s.combatContext = null;
     });
@@ -302,9 +306,9 @@ export class GameKernel {
   // --- 卡牌锁定 ---
 
   lockCards(cardUids: string[]): void {
-    this.dispatch(s => {
+    this.dispatch((s) => {
       for (const uid of cardUids) {
-        const idx = s.deck.findIndex(c => c.uid === uid);
+        const idx = s.deck.findIndex((c) => c.uid === uid);
         if (idx !== -1) {
           s.lockedDeck.push(s.deck[idx]);
           s.deck.splice(idx, 1);
@@ -332,7 +336,7 @@ export class GameKernel {
   selectEquipment(equipmentId: string): void {
     const eqData = this.dataStore.equipments.get(equipmentId);
     if (!eqData) return;
-    this.dispatch(s => {
+    this.dispatch((s) => {
       s.equipments.push({ dataId: equipmentId });
     });
     eventBus.emit(Events.EQUIPMENT_SELECTED, equipmentId);
@@ -355,8 +359,8 @@ export class GameKernel {
 
     const currentMonth = this.state.project?.currentMonth || 1;
 
-    this.dispatch(s => {
-      const existing = s.buffs.find(b => b.dataId === buffId);
+    this.dispatch((s) => {
+      const existing = s.buffs.find((b) => b.dataId === buffId);
       if (existing && buffData.stackable) {
         existing.stacks = Math.min(buffData.maxStacks, existing.stacks + 1);
       } else if (!existing) {
@@ -388,7 +392,7 @@ export class GameKernel {
       this.transition(GamePhase.PROJECT_RESULT);
     } else {
       // 进入下月：重置牌组，从员工基础卡重新构筑
-      this.dispatch(s => {
+      this.dispatch((s) => {
         if (s.project) {
           s.project.currentMonth++;
           s.project.currentDay = 1;
@@ -397,7 +401,7 @@ export class GameKernel {
         // 清除过期的 Boss 奖励 buff（持续到下月末）
         const bossRewardIds = new Set(this.dataStore.bossRewardBuffIds);
         const newMonth = s.project!.currentMonth;
-        s.buffs = s.buffs.filter(b => {
+        s.buffs = s.buffs.filter((b) => {
           // Boss 奖励 buff 过期检查
           if (bossRewardIds.has(b.dataId)) {
             if (b.acquiredMonth && b.acquiredMonth + 1 < newMonth) return false;
@@ -450,7 +454,9 @@ export class GameKernel {
   }
 
   markPublish(): void {
-    this.dispatch(s => { s.publishMarked = true; });
+    this.dispatch((s) => {
+      s.publishMarked = true;
+    });
     eventBus.emit(Events.PUBLISH_MARKED);
   }
 
@@ -460,7 +466,7 @@ export class GameKernel {
     const pData = this.dataStore.projects.get(projectId);
     if (!pData) return;
 
-    this.dispatch(s => {
+    this.dispatch((s) => {
       // 重置项目相关状态（保留 studio/employees/equipments/items）
       s.project = {
         dataId: projectId,
@@ -521,12 +527,12 @@ export class GameKernel {
     if (!itemData) return false;
     if (this.state.studio.funds < itemData.price) return false;
 
-    const existing = this.state.items.find(i => i.dataId === itemId);
+    const existing = this.state.items.find((i) => i.dataId === itemId);
     if (existing && existing.quantity >= itemData.maxStack) return false;
 
-    this.dispatch(s => {
+    this.dispatch((s) => {
       s.studio.funds -= itemData.price;
-      const item = s.items.find(i => i.dataId === itemId);
+      const item = s.items.find((i) => i.dataId === itemId);
       if (item) {
         item.quantity++;
       } else {
@@ -543,12 +549,12 @@ export class GameKernel {
     const itemData = this.dataStore.items.get(itemId);
     if (!itemData) return false;
 
-    const existingItem = this.state.items.find(i => i.dataId === itemId);
+    const existingItem = this.state.items.find((i) => i.dataId === itemId);
     if (!existingItem || existingItem.quantity <= 0) return false;
 
     // 应用效果
-    this.dispatch(s => {
-      const item = s.items.find(i => i.dataId === itemId);
+    this.dispatch((s) => {
+      const item = s.items.find((i) => i.dataId === itemId);
       if (item) item.quantity--;
 
       for (const effect of itemData.effects) {
@@ -565,7 +571,7 @@ export class GameKernel {
             break;
           case 'ADD_BLOCK': {
             const blockBuffId = 'buff_item_block_temp';
-            const existBuff = s.buffs.find(b => b.dataId === blockBuffId);
+            const existBuff = s.buffs.find((b) => b.dataId === blockBuffId);
             if (existBuff) {
               existBuff.stacks += effect.value;
             } else {
@@ -587,11 +593,14 @@ export class GameKernel {
               if (s.project) {
                 s.project.progress.quality = Math.min(100, s.project.progress.quality + 5);
               }
-              s.studio.environment.creativity = Math.min(100, s.studio.environment.creativity + effect.value);
+              s.studio.environment.creativity = Math.min(
+                100,
+                s.studio.environment.creativity + effect.value,
+              );
             }
             break;
           case 'REMOVE_DEBUFF': {
-            const debuffIdx = s.buffs.findIndex(b => {
+            const debuffIdx = s.buffs.findIndex((b) => {
               const bd = this.dataStore.buffs.get(b.dataId);
               return bd?.type === 'NEGATIVE';
             });
@@ -611,7 +620,7 @@ export class GameKernel {
     if (!eqData) return false;
     if (this.state.studio.funds < eqData.price) return false;
 
-    this.dispatch(s => {
+    this.dispatch((s) => {
       s.studio.funds -= eqData.price;
       s.equipments.push({ dataId: equipmentId });
     });
@@ -628,7 +637,7 @@ export class GameKernel {
     if (!eData) return;
     if (this.state.employees.length >= this.state.studio.maxEmployees) return;
 
-    this.dispatch(s => {
+    this.dispatch((s) => {
       s.employees.push({
         dataId: employeeId,
         stats: { ...eData.baseStats },
@@ -644,7 +653,7 @@ export class GameKernel {
   // --- 经济 ---
 
   modifyFunds(amount: number): void {
-    this.dispatch(s => {
+    this.dispatch((s) => {
       s.studio.funds += amount;
     });
     eventBus.emit(Events.FUNDS_CHANGED, this.state.studio.funds);
@@ -653,7 +662,7 @@ export class GameKernel {
   // --- 存档 ---
 
   saveToStorage(): void {
-    this.dispatch(s => {
+    this.dispatch((s) => {
       s.randomState = this.rng.getState();
     });
     localStorage.setItem('game_save', JSON.stringify(this.state));
@@ -669,30 +678,44 @@ export class GameKernel {
 
       // 存档迁移：添加新版本字段的默认值
       if (this.state.daily.currentWeek === undefined) {
-        this.dispatch(s => {
+        this.dispatch((s) => {
           s.daily.currentWeek = this.getWeekForDay(s.daily.currentDay);
         });
       }
       if (!this.state.lockedDeck) {
-        this.dispatch(s => { s.lockedDeck = []; });
+        this.dispatch((s) => {
+          s.lockedDeck = [];
+        });
       }
       if (this.state.combatContext === undefined) {
-        this.dispatch(s => { s.combatContext = null; });
+        this.dispatch((s) => {
+          s.combatContext = null;
+        });
       }
       if (!this.state.equipments) {
-        this.dispatch(s => { s.equipments = []; });
+        this.dispatch((s) => {
+          s.equipments = [];
+        });
       }
       if (this.state.lastCombatVictory === undefined) {
-        this.dispatch(s => { s.lastCombatVictory = false; });
+        this.dispatch((s) => {
+          s.lastCombatVictory = false;
+        });
       }
       if (this.state.publishMarked === undefined) {
-        this.dispatch(s => { s.publishMarked = false; });
+        this.dispatch((s) => {
+          s.publishMarked = false;
+        });
       }
       if (!this.state.items) {
-        this.dispatch(s => { s.items = []; });
+        this.dispatch((s) => {
+          s.items = [];
+        });
       }
       if (this.state.projectNumber === undefined) {
-        this.dispatch(s => { s.projectNumber = 1; });
+        this.dispatch((s) => {
+          s.projectNumber = 1;
+        });
       }
 
       return true;

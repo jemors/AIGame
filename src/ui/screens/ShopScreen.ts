@@ -19,108 +19,157 @@ export class ShopScreen implements Screen {
 
     // 装备列表
     const equipments = Array.from(dataStore.equipments.values());
-    const ownedEquipIds = new Set(state.equipments.map(e => e.dataId));
+    const ownedEquipIds = new Set(state.equipments.map((e) => e.dataId));
 
     // 道具列表
     const items = Array.from(dataStore.items.values());
 
     const rarityColors: Record<string, string> = {
-      COMMON: '#888', UNCOMMON: 'var(--highlight-blue)', RARE: '#DAA520',
+      COMMON: '#888',
+      UNCOMMON: 'var(--highlight-blue)',
+      RARE: '#DAA520',
     };
     const eqTypeIcons: Record<string, string> = {
-      ARMOR: '\u{1F6E1}\uFE0F', ATTACK: '\u2694\uFE0F', RECOVERY: '\u{1F49A}', ENERGY: '\u26A1',
+      ARMOR: '\u{1F6E1}\uFE0F',
+      ATTACK: '\u2694\uFE0F',
+      RECOVERY: '\u{1F49A}',
+      ENERGY: '\u26A1',
     };
 
-    const equipHtml = equipments.map(eq => {
-      const owned = ownedEquipIds.has(eq.id);
-      const canAfford = state.studio.funds >= eq.price;
-      const disabled = owned || !canAfford;
-      const borderColor = rarityColors[eq.rarity] || '#888';
-      return `
-        <div class="card" style="padding:10px;border-left:4px solid ${borderColor};opacity:${disabled ? '0.5' : '1'};">
-          <div style="display:flex;justify-content:space-between;align-items:center;">
+    const equipHtml = equipments
+      .map((eq) => {
+        const owned = ownedEquipIds.has(eq.id);
+        const canAfford = state.studio.funds >= eq.price;
+        const disabled = owned || !canAfford;
+        const borderColor = rarityColors[eq.rarity] || '#888';
+        return `
+        <div class="store-card ${disabled ? 'is-disabled' : ''}" style="border-left:4px solid ${borderColor};">
+          <div class="store-card-head">
             <div>
-              <div style="font-size:14px;font-weight:bold;">${eqTypeIcons[eq.type] || ''} ${eq.name}</div>
-              <div style="font-size:11px;color:var(--ink-light);margin-top:2px;">${eq.description}</div>
+              <div class="store-card-title">${eqTypeIcons[eq.type] || ''} ${eq.name}</div>
+              <div class="store-card-desc">${eq.description}</div>
             </div>
             <div style="text-align:right;">
-              <div style="font-size:13px;font-weight:bold;color:${canAfford ? 'var(--highlight-green)' : 'var(--highlight-red)'};">
+              <div class="store-price" style="color:${canAfford ? 'var(--highlight-green)' : 'var(--highlight-red)'};">
                 \u{1F4B0} ${eq.price.toLocaleString()}
               </div>
-              ${owned
-                ? '<span style="font-size:11px;color:var(--ink-light);">已拥有</span>'
-                : `<button class="btn buy-equip-btn" data-equip-id="${eq.id}" style="font-size:11px;padding:2px 10px;margin-top:4px;${!canAfford ? 'pointer-events:none;' : ''}">购买</button>`
+              ${
+                owned
+                  ? '<span class="flow-section-note">已拥有</span>'
+                  : `<button class="btn buy-equip-btn" data-equip-id="${eq.id}" style="margin-top:8px;font-size:12px;padding:6px 14px;${!canAfford ? 'pointer-events:none;' : ''}">购买</button>`
               }
             </div>
           </div>
         </div>`;
-    }).join('');
+      })
+      .join('');
 
-    const itemHtml = items.map(it => {
-      const owned = state.items.find(i => i.dataId === it.id);
-      const qty = owned?.quantity || 0;
-      const maxed = qty >= it.maxStack;
-      const canAfford = state.studio.funds >= it.price;
-      const disabled = maxed || !canAfford;
-      return `
-        <div class="card" style="padding:10px;opacity:${disabled ? '0.5' : '1'};">
-          <div style="display:flex;justify-content:space-between;align-items:center;">
+    const itemHtml = items
+      .map((it) => {
+        const owned = state.items.find((i) => i.dataId === it.id);
+        const qty = owned?.quantity || 0;
+        const maxed = qty >= it.maxStack;
+        const canAfford = state.studio.funds >= it.price;
+        const disabled = maxed || !canAfford;
+        return `
+        <div class="store-card ${disabled ? 'is-disabled' : ''}">
+          <div class="store-card-head">
             <div>
-              <div style="font-size:14px;font-weight:bold;">${it.icon} ${it.name} <span style="font-size:11px;color:var(--ink-light);">(${qty}/${it.maxStack})</span></div>
-              <div style="font-size:11px;color:var(--ink-light);margin-top:2px;">${it.description}</div>
+              <div class="store-card-title">${it.icon} ${it.name} <span style="font-size:11px;color:var(--ink-light);">(${qty}/${it.maxStack})</span></div>
+              <div class="store-card-desc">${it.description}</div>
             </div>
             <div style="text-align:right;">
-              <div style="font-size:13px;font-weight:bold;color:${canAfford ? 'var(--highlight-green)' : 'var(--highlight-red)'};">
+              <div class="store-price" style="color:${canAfford ? 'var(--highlight-green)' : 'var(--highlight-red)'};">
                 \u{1F4B0} ${it.price.toLocaleString()}
               </div>
-              ${maxed
-                ? '<span style="font-size:11px;color:var(--ink-light);">已满</span>'
-                : `<button class="btn buy-item-btn" data-item-id="${it.id}" style="font-size:11px;padding:2px 10px;margin-top:4px;${!canAfford ? 'pointer-events:none;' : ''}">购买</button>`
+              ${
+                maxed
+                  ? '<span class="flow-section-note">已满</span>'
+                  : `<button class="btn buy-item-btn" data-item-id="${it.id}" style="margin-top:8px;font-size:12px;padding:6px 14px;${!canAfford ? 'pointer-events:none;' : ''}">购买</button>`
               }
             </div>
           </div>
         </div>`;
-    }).join('');
+      })
+      .join('');
 
     container.innerHTML = `
-      <div class="screen" style="justify-content:flex-start;padding:24px;overflow-y:auto;">
-        <div style="max-width:800px;width:100%;margin:0 auto;">
-          <h2 class="title-decoration" style="font-family:var(--font-title);font-size:32px;margin-bottom:8px;text-align:center;">
-            \u{1F6D2} 商店
-          </h2>
-          <p style="text-align:center;font-size:14px;color:var(--ink-light);margin-bottom:16px;">
-            项目间歇 \u2014 \u{1F4B0} 当前资金: <strong style="color:var(--highlight-green);">${state.studio.funds.toLocaleString()}</strong>
-          </p>
+      <div class="screen flow-screen">
+        <div class="flow-shell">
+          <aside class="flow-side">
+            <section class="flow-panel flow-hero">
+              <span class="panel-eyebrow" style="color:rgba(255,237,211,0.72);">Intermission Market</span>
+              <h1>项目间歇商店</h1>
+              <p>
+                这一页不是把钱花完，而是决定下一个项目的战斗节奏和容错。永久装备影响长期强度，消耗品补的是短期缺口。
+              </p>
+              <div class="flow-hero-metrics">
+                <span class="ops-chip">当前资金 <strong>${state.studio.funds.toLocaleString()}</strong></span>
+                <span class="ops-chip">已拥有装备 <strong>${state.equipments.length}</strong></span>
+                <span class="ops-chip">背包道具 <strong>${state.items.reduce((sum, item) => sum + item.quantity, 0)}</strong></span>
+              </div>
+            </section>
 
-          <div style="display:grid;grid-template-columns:1fr 1fr;gap:16px;margin-bottom:24px;">
-            <!-- 装备 -->
-            <div>
-              <h3 style="font-size:16px;margin-bottom:8px;color:var(--ink-medium);">\u2694\uFE0F 装备（永久）</h3>
-              <div style="display:flex;flex-direction:column;gap:8px;">
+            <section class="flow-panel">
+              <div class="flow-section-head" style="margin-bottom:10px;">
+                <div>
+                  <span class="panel-eyebrow">Buying Rules</span>
+                  <h3>采购建议</h3>
+                </div>
+              </div>
+              <div class="candidate-meta" style="margin-top:0;">
+                <span>装备优先考虑能长期触发的收益</span>
+                <span>消耗品更适合补健康、体力与临时缺口</span>
+                <span>别在低资金时同时追求所有方向</span>
+              </div>
+            </section>
+          </aside>
+
+          <main class="flow-main">
+            <section class="flow-panel">
+              <div class="flow-section-head">
+                <div>
+                  <span class="panel-eyebrow">Permanent Gear</span>
+                  <h2>装备</h2>
+                </div>
+                <span class="tag info">长期收益</span>
+              </div>
+              <div class="store-list">
                 ${equipHtml}
               </div>
-            </div>
+            </section>
 
-            <!-- 消耗品 -->
-            <div>
-              <h3 style="font-size:16px;margin-bottom:8px;color:var(--ink-medium);">\u{1F9EA} 消耗品（一次性）</h3>
-              <div style="display:flex;flex-direction:column;gap:8px;">
+            <section class="flow-panel">
+              <div class="flow-section-head">
+                <div>
+                  <span class="panel-eyebrow">Consumables</span>
+                  <h2>消耗品</h2>
+                </div>
+                <span class="tag info">短期补给</span>
+              </div>
+              <div class="store-list">
                 ${itemHtml}
               </div>
-            </div>
-          </div>
+            </section>
 
-          <div style="text-align:center;">
-            <button id="btn-to-recruit" class="btn btn-primary" style="font-size:18px;padding:12px 32px;">
-              完成购物 \u2192 招募员工
-            </button>
-          </div>
+            <section class="flow-panel">
+              <div class="flow-cta-row">
+                <div>
+                  <div class="panel-eyebrow">Next Step</div>
+                  <p class="flow-cta-hint">购物完成后进入招募阶段，补齐下一项目的人手结构。</p>
+                </div>
+                <button id="btn-to-recruit" class="btn btn-primary" style="min-width:240px;">
+                  完成购物 → 招募员工
+                </button>
+              </div>
+            </section>
+          </main>
         </div>
       </div>
     `;
 
     // 绑定装备购买
-    container.querySelectorAll('.buy-equip-btn').forEach(btn => {
+    container.querySelectorAll('.buy-equip-btn').forEach((btn) => {
       btn.addEventListener('click', () => {
         const eqId = (btn as HTMLElement).dataset.equipId!;
         if (kernel.purchaseEquipmentFromShop(eqId)) {
@@ -130,7 +179,7 @@ export class ShopScreen implements Screen {
     });
 
     // 绑定道具购买
-    container.querySelectorAll('.buy-item-btn').forEach(btn => {
+    container.querySelectorAll('.buy-item-btn').forEach((btn) => {
       btn.addEventListener('click', () => {
         const itemId = (btn as HTMLElement).dataset.itemId!;
         if (kernel.purchaseItem(itemId)) {

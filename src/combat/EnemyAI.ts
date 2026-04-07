@@ -6,17 +6,16 @@ import { kernel } from '../kernel/GameKernel';
 import { eventBus, Events } from '../kernel/EventBus';
 import { EnemyIntentType } from '../models/types';
 import type { EnemyInstance } from '../models/Enemy';
-import type { EnemyIntent, EnemyData } from '../models/Enemy';
+import type { EnemyIntent } from '../models/Enemy';
 import type { CombatState } from './CombatState';
 import { cardEffectResolver } from './CardEffectResolver';
 
 export class EnemyAI {
-
   // 获取敌人下一步意图
   getNextIntent(enemy: EnemyInstance): EnemyIntent | null {
     // 优先使用缩放后的行为序列
-    const pattern = enemy.scaledIntentPattern
-      || kernel.getDataStore().enemies.get(enemy.dataId)?.intentPattern;
+    const pattern =
+      enemy.scaledIntentPattern || kernel.getDataStore().enemies.get(enemy.dataId)?.intentPattern;
     if (!pattern || pattern.length === 0) return null;
     return pattern[enemy.intentIndex % pattern.length];
   }
@@ -111,7 +110,7 @@ export class EnemyAI {
   }
 
   private getEnemyBuffStacks(enemy: EnemyInstance, buffId: string): number {
-    const b = enemy.buffs.find(b => b.dataId === buffId);
+    const b = enemy.buffs.find((b) => b.dataId === buffId);
     return b ? b.stacks : 0;
   }
 }

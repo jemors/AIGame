@@ -15,7 +15,8 @@ export class ProjectResultScreen implements Screen {
     const pData = kernel.getDataStore().projects.get(project.dataId);
 
     // 计算评分
-    const progAvg = (project.progress.programming + project.progress.art + project.progress.design) / 3;
+    const progAvg =
+      (project.progress.programming + project.progress.art + project.progress.design) / 3;
     const healthRatio = project.health / project.maxHealth;
     const qualityBonus = project.progress.quality * 0.3;
     const innovationBonus = project.progress.innovation * 0.2;
@@ -25,54 +26,128 @@ export class ProjectResultScreen implements Screen {
 
     let grade = 'D';
     let gradeColor = 'var(--highlight-red)';
-    if (score >= 90) { grade = 'S'; gradeColor = '#f0d060'; }
-    else if (score >= 80) { grade = 'A'; gradeColor = 'var(--highlight-green)'; }
-    else if (score >= 65) { grade = 'B'; gradeColor = 'var(--highlight-blue)'; }
-    else if (score >= 50) { grade = 'C'; gradeColor = 'var(--ink-medium)'; }
+    if (score >= 90) {
+      grade = 'S';
+      gradeColor = '#f0d060';
+    } else if (score >= 80) {
+      grade = 'A';
+      gradeColor = 'var(--highlight-green)';
+    } else if (score >= 65) {
+      grade = 'B';
+      gradeColor = 'var(--highlight-blue)';
+    } else if (score >= 50) {
+      grade = 'C';
+      gradeColor = 'var(--ink-medium)';
+    }
 
     // 计算收入
     const revenue = Math.round(score * 1000 + state.studio.reputation * 200);
+    const finalBalance = state.studio.funds + revenue;
+    const launchSummary =
+      score >= 90
+        ? '这是一款带着明确完成度和风格落地的作品，市场反馈会非常强。'
+        : score >= 80
+          ? '项目整体已经达到了稳定可卖的水准，足以为工作室带来一波健康现金流。'
+          : score >= 65
+            ? '这次发售能回本并留下经验，但还没到真正出圈的程度。'
+            : '项目勉强上线了，现金流虽然能续命，但下一轮必须更精细地经营。';
 
     container.innerHTML = `
-      <div class="screen" style="text-align:center;">
-        <div style="max-width:600px;">
-          <h2 class="title-decoration" style="font-family:var(--font-title);font-size:36px;margin-bottom:8px;">
-            项目发售！
-          </h2>
-          <p style="font-size:18px;color:var(--ink-medium);margin-bottom:32px;">
-            《${project.name}》正式上线了！
-          </p>
+      <div class="screen result-screen">
+        <div class="result-shell">
+          <aside class="result-side">
+            <section class="result-panel result-hero is-success">
+              <span class="panel-eyebrow" style="color:rgba(255,237,211,0.72);">Project Launch</span>
+              <h1>《${project.name}》正式上线</h1>
+              <p>${launchSummary}</p>
+              <div class="result-metric-list">
+                <span class="ops-chip">最终评级 <strong>${grade}</strong></span>
+                <span class="ops-chip">综合评分 <strong>${score}</strong></span>
+                <span class="ops-chip">销售收入 <strong>+${revenue.toLocaleString()}</strong></span>
+              </div>
+            </section>
+          </aside>
 
-          <!-- 大评分 -->
-          <div style="font-size:120px;font-family:var(--font-title);color:${gradeColor};margin-bottom:16px;line-height:1;">
-            ${grade}
-          </div>
-          <p style="font-size:24px;margin-bottom:32px;">综合评分: ${score}分</p>
+          <main class="result-main">
+            <section class="result-panel" style="text-align:center;">
+              <div class="result-section-head">
+                <div>
+                  <span class="panel-eyebrow">Review Score</span>
+                  <h2>项目评级</h2>
+                </div>
+                <span class="tag info">${pData?.name || 'Project'}</span>
+              </div>
+              <div class="grade-emblem" style="background:radial-gradient(circle at 30% 30%, rgba(255,255,255,0.24), transparent 32%), linear-gradient(135deg, ${gradeColor}, rgba(32,25,18,0.92));margin:0 auto 18px;">
+                ${grade}
+              </div>
+              <p style="font-size:26px;font-weight:800;color:var(--ink-dark);">综合评分 ${score} 分</p>
+            </section>
 
-          <div class="card" style="text-align:left;margin-bottom:20px;">
-            <h3 style="font-size:16px;margin-bottom:12px;">📊 详细评价</h3>
-            <div style="display:grid;grid-template-columns:1fr 1fr;gap:8px;font-size:14px;">
-              <div>编程完成度: ${Math.round(project.progress.programming)}%</div>
-              <div>美术完成度: ${Math.round(project.progress.art)}%</div>
-              <div>策划完成度: ${Math.round(project.progress.design)}%</div>
-              <div>项目健康度: ${Math.round(healthRatio * 100)}%</div>
-            </div>
-          </div>
+            <section class="result-panel">
+              <div class="result-section-head">
+                <div>
+                  <span class="panel-eyebrow">Review Breakdown</span>
+                  <h2>详细评价</h2>
+                </div>
+                <span class="tag info">Postmortem</span>
+              </div>
+              <div class="result-stat-grid">
+                <div class="result-kpi">
+                  <div class="result-kpi-label">编程完成度</div>
+                  <div class="result-kpi-value">${Math.round(project.progress.programming)}%</div>
+                </div>
+                <div class="result-kpi">
+                  <div class="result-kpi-label">美术完成度</div>
+                  <div class="result-kpi-value">${Math.round(project.progress.art)}%</div>
+                </div>
+                <div class="result-kpi">
+                  <div class="result-kpi-label">策划完成度</div>
+                  <div class="result-kpi-value">${Math.round(project.progress.design)}%</div>
+                </div>
+                <div class="result-kpi">
+                  <div class="result-kpi-label">项目健康度</div>
+                  <div class="result-kpi-value">${Math.round(healthRatio * 100)}%</div>
+                </div>
+              </div>
+            </section>
 
-          <div class="card" style="text-align:left;margin-bottom:24px;">
-            <h3 style="font-size:16px;margin-bottom:12px;">💰 收益结算</h3>
-            <div style="font-size:14px;margin-bottom:4px;">游戏销售收入: <strong style="color:var(--highlight-green);">+${revenue.toLocaleString()}</strong></div>
-            <div style="font-size:14px;">最终余额: <strong>${(state.studio.funds + revenue).toLocaleString()}</strong></div>
-          </div>
+            <section class="result-panel">
+              <div class="result-section-head">
+                <div>
+                  <span class="panel-eyebrow">Revenue Report</span>
+                  <h2>收益结算</h2>
+                </div>
+                <span class="tag positive">Cash Flow</span>
+              </div>
+              <div class="finance-list">
+                <div class="finance-row">
+                  <span>游戏销售收入</span>
+                  <strong style="color:var(--highlight-green);">+${revenue.toLocaleString()}</strong>
+                </div>
+                <div class="finance-row is-total">
+                  <span>结算后余额</span>
+                  <strong>${finalBalance.toLocaleString()}</strong>
+                </div>
+              </div>
+            </section>
 
-          <div style="display:flex;gap:12px;justify-content:center;">
-            <button id="btn-to-shop" class="btn btn-primary" style="font-size:18px;padding:12px 32px;">
-              前往商店 →
-            </button>
-            <button id="btn-back-title" class="btn" style="font-size:14px;padding:10px 20px;">
-              返回标题
-            </button>
-          </div>
+            <section class="result-panel">
+              <div class="result-action-row">
+                <div>
+                  <div class="panel-eyebrow">Next Step</div>
+                  <p class="result-action-note">你可以直接进入项目间歇商店，为下一轮项目做准备，或者回到标题页结束本局。</p>
+                </div>
+                <div style="display:flex;gap:12px;flex-wrap:wrap;">
+                  <button id="btn-to-shop" class="btn btn-primary" style="min-width:180px;">
+                    前往商店 →
+                  </button>
+                  <button id="btn-back-title" class="btn" style="min-width:140px;">
+                    返回标题
+                  </button>
+                </div>
+              </div>
+            </section>
+          </main>
         </div>
       </div>
     `;

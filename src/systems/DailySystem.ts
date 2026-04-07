@@ -6,7 +6,6 @@
 import { kernel } from '../kernel/GameKernel';
 import { eventBus, Events } from '../kernel/EventBus';
 import { ActivityType, TimeSlot, EmployeeRole } from '../models/types';
-import type { CardInstance } from '../models/Card';
 
 export interface ActivityOption {
   type: ActivityType;
@@ -21,11 +20,11 @@ export interface ActivityOption {
     morale?: number;
     creativity?: number;
     loyalty?: number;
-    staminaRestore?: number;  // 体力恢复（仅休息用）
-    healthRestore?: number;   // 项目健康值恢复
+    staminaRestore?: number; // 体力恢复（仅休息用）
+    healthRestore?: number; // 项目健康值恢复
   };
-  cardRewards: string[];     // 可能产出的 cardId 列表
-  negativeCards?: string[];  // 负面状态牌
+  cardRewards: string[]; // 可能产出的 cardId 列表
+  negativeCards?: string[]; // 负面状态牌
 }
 
 // 活动定义
@@ -58,7 +57,12 @@ export const ACTIVITIES: ActivityOption[] = [
     staminaCost: 6,
     roleStaminaWeight: { [EmployeeRole.DESIGNER]: 0.8, [EmployeeRole.PROGRAMMER]: 0.6 },
     effects: { progress: { design: 3 }, morale: 2, healthRestore: 3 },
-    cardRewards: ['card_team_sync', 'card_code_review', 'card_emergency_meeting', 'card_steady_progress'],
+    cardRewards: [
+      'card_team_sync',
+      'card_code_review',
+      'card_emergency_meeting',
+      'card_steady_progress',
+    ],
   },
   {
     type: ActivityType.BRAINSTORM,
@@ -76,7 +80,12 @@ export const ACTIVITIES: ActivityOption[] = [
     description: '恢复大量项目健康值，提升士气和忠诚度',
     icon: '🎉',
     staminaCost: 18,
-    roleStaminaWeight: { [EmployeeRole.PROGRAMMER]: 0.8, [EmployeeRole.ARTIST]: 0.8, [EmployeeRole.DESIGNER]: 0.8, [EmployeeRole.QA]: 0.8 },
+    roleStaminaWeight: {
+      [EmployeeRole.PROGRAMMER]: 0.8,
+      [EmployeeRole.ARTIST]: 0.8,
+      [EmployeeRole.DESIGNER]: 0.8,
+      [EmployeeRole.QA]: 0.8,
+    },
     effects: { morale: 12, loyalty: 5, healthRestore: 12 },
     cardRewards: ['card_team_sync', 'card_pair_programming', 'card_team_rally'],
   },
@@ -121,7 +130,7 @@ export class DailySystem {
 
     // 晚间可以加班，白天不行
     if (slot !== TimeSlot.EVENING) {
-      return ACTIVITIES.filter(a => a.type !== ActivityType.OVERTIME);
+      return ACTIVITIES.filter((a) => a.type !== ActivityType.OVERTIME);
     }
     return [...ACTIVITIES];
   }
@@ -146,12 +155,15 @@ export class DailySystem {
     const prevProg = state.project ? { ...state.project.progress } : null;
 
     // 1. 应用即时效果
-    kernel.dispatch(s => {
+    kernel.dispatch((s) => {
       // 推进项目进度
       if (activity.effects.progress && s.project) {
         const p = activity.effects.progress;
         if (p.programming) {
-          s.project.progress.programming = Math.min(100, s.project.progress.programming + p.programming);
+          s.project.progress.programming = Math.min(
+            100,
+            s.project.progress.programming + p.programming,
+          );
         }
         if (p.art) {
           s.project.progress.art = Math.min(100, s.project.progress.art + p.art);
@@ -163,12 +175,16 @@ export class DailySystem {
 
       // 更新工作室环境
       if (activity.effects.morale) {
-        s.studio.environment.morale = Math.max(0, Math.min(100,
-          s.studio.environment.morale + activity.effects.morale));
+        s.studio.environment.morale = Math.max(
+          0,
+          Math.min(100, s.studio.environment.morale + activity.effects.morale),
+        );
       }
       if (activity.effects.creativity) {
-        s.studio.environment.creativity = Math.max(0, Math.min(100,
-          s.studio.environment.creativity + activity.effects.creativity));
+        s.studio.environment.creativity = Math.max(
+          0,
+          Math.min(100, s.studio.environment.creativity + activity.effects.creativity),
+        );
       }
 
       // 更新员工状态（按角色差异化消耗体力）
@@ -180,12 +196,17 @@ export class DailySystem {
 
         // 休息时额外恢复体力
         if (activity.effects.staminaRestore) {
-          emp.stats.stamina = Math.min(emp.stats.maxStamina,
-            emp.stats.stamina + activity.effects.staminaRestore);
+          emp.stats.stamina = Math.min(
+            emp.stats.maxStamina,
+            emp.stats.stamina + activity.effects.staminaRestore,
+          );
         }
 
         if (activity.effects.loyalty) {
-          emp.stats.loyalty = Math.max(0, Math.min(100, emp.stats.loyalty + activity.effects.loyalty));
+          emp.stats.loyalty = Math.max(
+            0,
+            Math.min(100, emp.stats.loyalty + activity.effects.loyalty),
+          );
         }
         if (activity.effects.morale) {
           emp.stats.morale = Math.max(0, Math.min(100, emp.stats.morale + activity.effects.morale));
@@ -194,8 +215,10 @@ export class DailySystem {
 
       // 恢复项目健康值
       if (activity.effects.healthRestore && s.project) {
-        s.project.health = Math.min(s.project.maxHealth,
-          s.project.health + activity.effects.healthRestore);
+        s.project.health = Math.min(
+          s.project.maxHealth,
+          s.project.health + activity.effects.healthRestore,
+        );
       }
 
       // 记录活动
@@ -207,7 +230,11 @@ export class DailySystem {
       const newState = kernel.getState();
       const newProg = newState.project?.progress;
       if (newProg) {
-        const progressBuffMap: Array<{ key: keyof typeof prevProg; buffId: string; label: string }> = [
+        const progressBuffMap: Array<{
+          key: keyof typeof prevProg;
+          buffId: string;
+          label: string;
+        }> = [
           { key: 'programming', buffId: 'buff_progress_programming', label: '代码完备' },
           { key: 'art', buffId: 'buff_progress_art', label: '视觉精良' },
           { key: 'design', buffId: 'buff_progress_design', label: '设计成熟' },
@@ -215,8 +242,8 @@ export class DailySystem {
         for (const { key, buffId, label } of progressBuffMap) {
           if (prevProg[key] < 100 && newProg[key] >= 100) {
             // 仅在尚未拥有该buff时添加
-            if (!newState.buffs.some(b => b.dataId === buffId)) {
-              kernel.dispatch(s => {
+            if (!newState.buffs.some((b) => b.dataId === buffId)) {
+              kernel.dispatch((s) => {
                 const bd = kernel.getDataStore().buffs.get(buffId);
                 s.buffs.push({
                   dataId: buffId,
@@ -240,7 +267,7 @@ export class DailySystem {
       const uid = `${cardId}_${Date.now()}_${rng.nextInt(100, 999)}`;
       cardsGained.push(cardId);
 
-      kernel.dispatch(s => {
+      kernel.dispatch((s) => {
         s.deck.push({ uid, dataId: cardId, upgraded: false });
         s.daily.cardsGainedToday.push(cardId);
       });
@@ -254,7 +281,7 @@ export class DailySystem {
       for (const negId of activity.negativeCards) {
         const uid = `${negId}_${Date.now()}_${rng.nextInt(100, 999)}`;
         cardsGained.push(negId);
-        kernel.dispatch(s => {
+        kernel.dispatch((s) => {
           s.deck.push({ uid, dataId: negId, upgraded: false });
         });
       }
@@ -263,14 +290,14 @@ export class DailySystem {
     // 4. 休息特殊效果：移除一张负面状态卡
     if (activity.type === ActivityType.REST) {
       const deck = kernel.getState().deck;
-      const statusCards = deck.filter(c => {
+      const statusCards = deck.filter((c) => {
         const cd = kernel.getDataStore().cards.get(c.dataId);
         return cd?.type === 'STATUS';
       });
       if (statusCards.length > 0) {
         const toRemove = rng.pick(statusCards);
-        kernel.dispatch(s => {
-          s.deck = s.deck.filter(c => c.uid !== toRemove.uid);
+        kernel.dispatch((s) => {
+          s.deck = s.deck.filter((c) => c.uid !== toRemove.uid);
         });
         const removedCard = kernel.getDataStore().cards.get(toRemove.dataId);
         eventBus.emit(Events.CARD_REMOVED, toRemove.dataId, removedCard?.name);
@@ -279,7 +306,7 @@ export class DailySystem {
 
     // 5. 构造反馈消息
     const cardNames = cardsGained
-      .map(id => kernel.getDataStore().cards.get(id)?.name || id)
+      .map((id) => kernel.getDataStore().cards.get(id)?.name || id)
       .join('、');
     const progressStr = activity.effects.progress
       ? Object.entries(activity.effects.progress)
@@ -292,8 +319,11 @@ export class DailySystem {
       progressStr && `进度: ${progressStr}`,
       cardNames && `获得卡牌: ${cardNames}`,
       activity.effects.healthRestore && `项目健康+${activity.effects.healthRestore}`,
-      activity.effects.morale && `士气${activity.effects.morale > 0 ? '+' : ''}${activity.effects.morale}`,
-    ].filter(Boolean).join(' | ');
+      activity.effects.morale &&
+        `士气${activity.effects.morale > 0 ? '+' : ''}${activity.effects.morale}`,
+    ]
+      .filter(Boolean)
+      .join(' | ');
 
     eventBus.emit(Events.ACTIVITY_COMPLETED, activity.type, message);
     return { cardsGained, message };

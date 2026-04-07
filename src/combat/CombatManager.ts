@@ -4,7 +4,7 @@
 
 import { kernel } from '../kernel/GameKernel';
 import { eventBus, Events } from '../kernel/EventBus';
-import type { CardData, CardInstance } from '../models/Card';
+import type { CardInstance } from '../models/Card';
 import type { EnemyInstance } from '../models/Enemy';
 import { CombatState, createCombatState } from './CombatState';
 import { cardEffectResolver } from './CardEffectResolver';
@@ -30,11 +30,12 @@ export class CombatManager {
 
     if (context?.isBossFight) {
       // Boss战：使用缩放后的Boss敌人
-      const bossId = pData?.bossEnemies?.[project.currentMonth - 1]
-        || pData?.monthlyEnemies[project.currentMonth - 1]?.[
+      const bossId =
+        pData?.bossEnemies?.[project.currentMonth - 1] ||
+        pData?.monthlyEnemies[project.currentMonth - 1]?.[
           (pData.monthlyEnemies[project.currentMonth - 1]?.length || 1) - 1
-        ]
-        || 'enemy_tech_debt_giant';
+        ] ||
+        'enemy_tech_debt_giant';
 
       if (context.isFinalBoss) {
         // 最终Boss：2倍强度
@@ -59,17 +60,12 @@ export class CombatManager {
       );
 
       // 每周战斗使用牌组（排除锁定的牌）
-      const lockedUids = new Set(gameState.lockedDeck.map(c => c.uid));
-      combatDeck = gameState.deck.filter(c => !lockedUids.has(c.uid));
+      const lockedUids = new Set(gameState.lockedDeck.map((c) => c.uid));
+      combatDeck = gameState.deck.filter((c) => !lockedUids.has(c.uid));
     }
 
     // 创建对战状态
-    this.state = createCombatState(
-      combatDeck,
-      project.health,
-      project.maxHealth,
-      enemies,
-    );
+    this.state = createCombatState(combatDeck, project.health, project.maxHealth, enemies);
 
     // 洗牌
     this.state.drawPile = kernel.getRng().shuffle(this.state.drawPile);
@@ -130,7 +126,9 @@ export class CombatManager {
     // 抽5张牌（减去沟通不畅等负面效果）
     let drawCount = 5;
     // 检查手中是否有"沟通不畅"状态牌
-    const commBreakdown = this.state.hand.filter(c => c.dataId === 'card_communication_breakdown');
+    const commBreakdown = this.state.hand.filter(
+      (c) => c.dataId === 'card_communication_breakdown',
+    );
     drawCount -= commBreakdown.length;
     drawCount = Math.max(1, drawCount);
 
@@ -139,7 +137,7 @@ export class CombatManager {
     }
 
     // 检查倦怠状态牌：减少能量
-    const burnouts = this.state.hand.filter(c => c.dataId === 'card_burnout');
+    const burnouts = this.state.hand.filter((c) => c.dataId === 'card_burnout');
     this.state.energy = Math.max(0, this.state.energy - burnouts.length);
 
     eventBus.emit(Events.TURN_STARTED, this.state.turn);
@@ -150,7 +148,7 @@ export class CombatManager {
   playCard(cardUid: string, targetEnemyIndex: number = 0): boolean {
     if (!this.state || !this.state.isPlayerTurn || this.state.combatOver) return false;
 
-    const cardIdx = this.state.hand.findIndex(c => c.uid === cardUid);
+    const cardIdx = this.state.hand.findIndex((c) => c.uid === cardUid);
     if (cardIdx === -1) return false;
 
     const card = this.state.hand[cardIdx];
@@ -162,7 +160,7 @@ export class CombatManager {
 
     // 计算实际费用（需求蔓延+1）
     let cost = cardData.cost;
-    const scopeCreep = this.state.hand.filter(c => c.dataId === 'card_scope_creep');
+    const scopeCreep = this.state.hand.filter((c) => c.dataId === 'card_scope_creep');
     cost += scopeCreep.length;
 
     // 检查能量
@@ -185,7 +183,7 @@ export class CombatManager {
     }
 
     // 更新统计
-    kernel.dispatch(s => {
+    kernel.dispatch((s) => {
       s.stats.totalCardsPlayed++;
     });
 
@@ -249,7 +247,7 @@ export class CombatManager {
     const victory = this.state.victory;
 
     // 更新项目健康度
-    kernel.dispatch(s => {
+    kernel.dispatch((s) => {
       if (s.project) {
         s.project.health = Math.max(0, this.state!.playerHp);
       }

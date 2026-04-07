@@ -7,7 +7,14 @@
     "duration": -1,
     "stackable": true,
     "maxStacks": 99,
-    "effects": [{"trigger": "ON_CARD_PLAY", "modifier": "damage_add", "value": 1, "condition": "card.type === 'ATTACK'"}],
+    "effects": [
+      {
+        "trigger": "ON_CARD_PLAY",
+        "modifier": "damage_add",
+        "value": 1,
+        "condition": "card.type === 'ATTACK'"
+      }
+    ],
     "hidden": false
   },
   {
@@ -18,7 +25,14 @@
     "duration": -1,
     "stackable": true,
     "maxStacks": 99,
-    "effects": [{"trigger": "ON_CARD_PLAY", "modifier": "block_add", "value": 1, "condition": "card.type === 'SKILL'"}],
+    "effects": [
+      {
+        "trigger": "ON_CARD_PLAY",
+        "modifier": "block_add",
+        "value": 1,
+        "condition": "card.type === 'SKILL'"
+      }
+    ],
     "hidden": false
   },
   {
@@ -29,7 +43,7 @@
     "duration": 3,
     "stackable": true,
     "maxStacks": 99,
-    "effects": [{"trigger": "PASSIVE", "modifier": "damage_taken_mult", "value": 1.5}],
+    "effects": [{ "trigger": "PASSIVE", "modifier": "damage_taken_mult", "value": 1.5 }],
     "hidden": false
   },
   {
@@ -40,7 +54,7 @@
     "duration": 3,
     "stackable": true,
     "maxStacks": 99,
-    "effects": [{"trigger": "PASSIVE", "modifier": "damage_dealt_mult", "value": 0.75}],
+    "effects": [{ "trigger": "PASSIVE", "modifier": "damage_dealt_mult", "value": 0.75 }],
     "hidden": false
   },
   {
@@ -51,7 +65,7 @@
     "duration": -1,
     "stackable": true,
     "maxStacks": 10,
-    "effects": [{"trigger": "ON_TURN_END", "modifier": "self_damage", "value": 1}],
+    "effects": [{ "trigger": "ON_TURN_END", "modifier": "self_damage", "value": 1 }],
     "hidden": false
   },
   {
@@ -62,7 +76,14 @@
     "duration": 1,
     "stackable": false,
     "maxStacks": 1,
-    "effects": [{"trigger": "ON_CARD_PLAY", "modifier": "damage_mult", "value": 2, "condition": "card.type === 'ATTACK'"}],
+    "effects": [
+      {
+        "trigger": "ON_CARD_PLAY",
+        "modifier": "damage_mult",
+        "value": 2,
+        "condition": "card.type === 'ATTACK'"
+      }
+    ],
     "hidden": false
   },
   {
@@ -73,7 +94,7 @@
     "duration": -1,
     "stackable": true,
     "maxStacks": 3,
-    "effects": [{"trigger": "ON_TURN_START", "modifier": "draw_add", "value": 1}],
+    "effects": [{ "trigger": "ON_TURN_START", "modifier": "draw_add", "value": 1 }],
     "hidden": false
   },
   {
@@ -84,7 +105,7 @@
     "duration": -1,
     "stackable": true,
     "maxStacks": 20,
-    "effects": [{"trigger": "ON_TURN_START", "modifier": "auto_block", "value": 1}],
+    "effects": [{ "trigger": "ON_TURN_START", "modifier": "auto_block", "value": 1 }],
     "hidden": false
   },
   {
@@ -95,7 +116,7 @@
     "duration": -1,
     "stackable": true,
     "maxStacks": 3,
-    "effects": [{"trigger": "ON_TURN_START", "modifier": "energy_add", "value": 1}],
+    "effects": [{ "trigger": "ON_TURN_START", "modifier": "energy_add", "value": 1 }],
     "hidden": false
   },
   {
@@ -106,7 +127,7 @@
     "duration": 5,
     "stackable": false,
     "maxStacks": 1,
-    "effects": [{"trigger": "ON_TURN_START", "modifier": "auto_block", "value": 2}],
+    "effects": [{ "trigger": "ON_TURN_START", "modifier": "auto_block", "value": 2 }],
     "hidden": false
   },
   {
@@ -117,7 +138,7 @@
     "duration": -1,
     "stackable": false,
     "maxStacks": 1,
-    "effects": [{"trigger": "PASSIVE", "modifier": "efficiency_mult", "value": 0.7}],
+    "effects": [{ "trigger": "PASSIVE", "modifier": "efficiency_mult", "value": 0.7 }],
     "hidden": true,
     "revealCondition": "event_license_freeze"
   },
@@ -130,7 +151,7 @@
     "duration": -1,
     "stackable": true,
     "maxStacks": 99,
-    "effects": [{"trigger": "ON_COMBAT_START", "modifier": "initial_block", "value": 1}],
+    "effects": [{ "trigger": "ON_COMBAT_START", "modifier": "initial_block", "value": 1 }],
     "hidden": false
   },
   {
@@ -141,7 +162,7 @@
     "duration": -1,
     "stackable": true,
     "maxStacks": 99,
-    "effects": [{"trigger": "ON_COMBAT_START", "modifier": "initial_block", "value": 1}],
+    "effects": [{ "trigger": "ON_COMBAT_START", "modifier": "initial_block", "value": 1 }],
     "hidden": false
   },
   {
@@ -152,7 +173,7 @@
     "duration": -1,
     "stackable": true,
     "maxStacks": 99,
-    "effects": [{"trigger": "ON_COMBAT_START", "modifier": "initial_block", "value": 1}],
+    "effects": [{ "trigger": "ON_COMBAT_START", "modifier": "initial_block", "value": 1 }],
     "hidden": false
   },
   {
@@ -163,7 +184,14 @@
     "duration": -1,
     "stackable": true,
     "maxStacks": 99,
-    "effects": [{"trigger": "ON_CARD_PLAY", "modifier": "damage_add", "value": 1, "condition": "card.type === 'ATTACK'"}],
+    "effects": [
+      {
+        "trigger": "ON_CARD_PLAY",
+        "modifier": "damage_add",
+        "value": 1,
+        "condition": "card.type === 'ATTACK'"
+      }
+    ],
     "hidden": false
   },
   {
@@ -174,7 +202,14 @@
     "duration": -1,
     "stackable": true,
     "maxStacks": 99,
-    "effects": [{"trigger": "ON_CARD_PLAY", "modifier": "damage_add", "value": 1, "condition": "card.type === 'ATTACK'"}],
+    "effects": [
+      {
+        "trigger": "ON_CARD_PLAY",
+        "modifier": "damage_add",
+        "value": 1,
+        "condition": "card.type === 'ATTACK'"
+      }
+    ],
     "hidden": false
   },
   {
@@ -185,7 +220,14 @@
     "duration": -1,
     "stackable": true,
     "maxStacks": 99,
-    "effects": [{"trigger": "ON_CARD_PLAY", "modifier": "damage_add", "value": 1, "condition": "card.type === 'ATTACK'"}],
+    "effects": [
+      {
+        "trigger": "ON_CARD_PLAY",
+        "modifier": "damage_add",
+        "value": 1,
+        "condition": "card.type === 'ATTACK'"
+      }
+    ],
     "hidden": false
   },
   {
@@ -196,7 +238,7 @@
     "duration": -1,
     "stackable": true,
     "maxStacks": 20,
-    "effects": [{"trigger": "ON_TURN_START", "modifier": "heal", "value": 1}],
+    "effects": [{ "trigger": "ON_TURN_START", "modifier": "heal", "value": 1 }],
     "hidden": false
   },
   {
@@ -207,7 +249,7 @@
     "duration": -1,
     "stackable": true,
     "maxStacks": 20,
-    "effects": [{"trigger": "ON_TURN_START", "modifier": "heal", "value": 1}],
+    "effects": [{ "trigger": "ON_TURN_START", "modifier": "heal", "value": 1 }],
     "hidden": false
   },
   {
@@ -218,7 +260,7 @@
     "duration": -1,
     "stackable": true,
     "maxStacks": 5,
-    "effects": [{"trigger": "ON_COMBAT_START", "modifier": "max_energy_add", "value": 1}],
+    "effects": [{ "trigger": "ON_COMBAT_START", "modifier": "max_energy_add", "value": 1 }],
     "hidden": false
   },
   {
@@ -230,8 +272,8 @@
     "stackable": true,
     "maxStacks": 3,
     "effects": [
-      {"trigger": "ON_COMBAT_START", "modifier": "max_energy_add", "value": 1},
-      {"trigger": "ON_TURN_START", "modifier": "draw_add", "value": 1}
+      { "trigger": "ON_COMBAT_START", "modifier": "max_energy_add", "value": 1 },
+      { "trigger": "ON_TURN_START", "modifier": "draw_add", "value": 1 }
     ],
     "hidden": false
   },
@@ -244,7 +286,14 @@
     "duration": -1,
     "stackable": true,
     "maxStacks": 10,
-    "effects": [{"trigger": "ON_CARD_PLAY", "modifier": "damage_add", "value": 1, "condition": "card.type === 'ATTACK'"}],
+    "effects": [
+      {
+        "trigger": "ON_CARD_PLAY",
+        "modifier": "damage_add",
+        "value": 1,
+        "condition": "card.type === 'ATTACK'"
+      }
+    ],
     "hidden": false
   },
   {
@@ -255,7 +304,7 @@
     "duration": -1,
     "stackable": true,
     "maxStacks": 20,
-    "effects": [{"trigger": "ON_TURN_START", "modifier": "auto_block", "value": 3}],
+    "effects": [{ "trigger": "ON_TURN_START", "modifier": "auto_block", "value": 3 }],
     "hidden": false
   },
   {
@@ -266,7 +315,7 @@
     "duration": -1,
     "stackable": true,
     "maxStacks": 3,
-    "effects": [{"trigger": "ON_TURN_START", "modifier": "energy_add", "value": 1}],
+    "effects": [{ "trigger": "ON_TURN_START", "modifier": "energy_add", "value": 1 }],
     "hidden": false
   },
   {
@@ -277,7 +326,7 @@
     "duration": -1,
     "stackable": true,
     "maxStacks": 3,
-    "effects": [{"trigger": "ON_TURN_START", "modifier": "draw_add", "value": 1}],
+    "effects": [{ "trigger": "ON_TURN_START", "modifier": "draw_add", "value": 1 }],
     "hidden": false
   },
   {
@@ -288,7 +337,7 @@
     "duration": -1,
     "stackable": true,
     "maxStacks": 10,
-    "effects": [{"trigger": "ON_TURN_START", "modifier": "heal", "value": 2}],
+    "effects": [{ "trigger": "ON_TURN_START", "modifier": "heal", "value": 2 }],
     "hidden": false
   },
   {
@@ -299,7 +348,14 @@
     "duration": -1,
     "stackable": true,
     "maxStacks": 10,
-    "effects": [{"trigger": "ON_CARD_PLAY", "modifier": "damage_add", "value": 1, "condition": "card.type === 'ATTACK'"}],
+    "effects": [
+      {
+        "trigger": "ON_CARD_PLAY",
+        "modifier": "damage_add",
+        "value": 1,
+        "condition": "card.type === 'ATTACK'"
+      }
+    ],
     "hidden": false
   },
 
@@ -311,7 +367,7 @@
     "duration": -1,
     "stackable": true,
     "maxStacks": 5,
-    "effects": [{"trigger": "ON_TURN_START", "modifier": "auto_block", "value": 2}],
+    "effects": [{ "trigger": "ON_TURN_START", "modifier": "auto_block", "value": 2 }],
     "hidden": false
   },
   {
@@ -322,7 +378,7 @@
     "duration": -1,
     "stackable": true,
     "maxStacks": 5,
-    "effects": [{"trigger": "ON_TURN_END", "modifier": "self_damage", "value": 1}],
+    "effects": [{ "trigger": "ON_TURN_END", "modifier": "self_damage", "value": 1 }],
     "hidden": false
   },
   {
@@ -333,7 +389,14 @@
     "duration": -1,
     "stackable": true,
     "maxStacks": 10,
-    "effects": [{"trigger": "ON_CARD_PLAY", "modifier": "damage_add", "value": 2, "condition": "card.type === 'ATTACK'"}],
+    "effects": [
+      {
+        "trigger": "ON_CARD_PLAY",
+        "modifier": "damage_add",
+        "value": 2,
+        "condition": "card.type === 'ATTACK'"
+      }
+    ],
     "hidden": false
   },
   {
@@ -344,7 +407,7 @@
     "duration": -1,
     "stackable": true,
     "maxStacks": 3,
-    "effects": [{"trigger": "ON_TURN_START", "modifier": "energy_add", "value": 1}],
+    "effects": [{ "trigger": "ON_TURN_START", "modifier": "energy_add", "value": 1 }],
     "hidden": false
   },
 
@@ -356,7 +419,14 @@
     "duration": -1,
     "stackable": true,
     "maxStacks": 10,
-    "effects": [{"trigger": "ON_CARD_PLAY", "modifier": "damage_add", "value": 2, "condition": "card.type === 'ATTACK'"}],
+    "effects": [
+      {
+        "trigger": "ON_CARD_PLAY",
+        "modifier": "damage_add",
+        "value": 2,
+        "condition": "card.type === 'ATTACK'"
+      }
+    ],
     "hidden": false
   },
   {
@@ -367,7 +437,7 @@
     "duration": -1,
     "stackable": true,
     "maxStacks": 10,
-    "effects": [{"trigger": "ON_TURN_START", "modifier": "auto_block", "value": 2}],
+    "effects": [{ "trigger": "ON_TURN_START", "modifier": "auto_block", "value": 2 }],
     "hidden": false
   },
   {
@@ -378,7 +448,7 @@
     "duration": -1,
     "stackable": true,
     "maxStacks": 3,
-    "effects": [{"trigger": "ON_TURN_START", "modifier": "draw_add", "value": 1}],
+    "effects": [{ "trigger": "ON_TURN_START", "modifier": "draw_add", "value": 1 }],
     "hidden": false
   }
 ]

@@ -8,36 +8,53 @@ import { combatManager } from '../combat/CombatManager';
 import { kernel } from '../kernel/GameKernel';
 import { eventBus, Events } from '../kernel/EventBus';
 import type { CardData, CardInstance } from '../models/Card';
-import type { EnemyData, EnemyInstance } from '../models/Enemy';
+import type { EnemyInstance } from '../models/Enemy';
 
 const W = 960;
 const H = 640;
+const UI_FONT = '"Noto Sans SC", Arial, sans-serif';
+const TITLE_FONT = '"Noto Serif SC", serif';
+const MONO_FONT = '"JetBrains Mono", "Courier New", monospace';
 
 const COLORS = {
-  bg: 0xf5f0e8,
-  cardBg: 0xfffdf7,
-  cardBorder: 0x3a3a3a,
-  attack: 0xcc4444,
-  skill: 0x4488aa,
-  power: 0xbb8833,
-  status: 0x888888,
-  heal: 0x44aa66,
-  hp: 0xcc4444,
-  hpBg: 0x442222,
-  block: 0x4488aa,
-  energy: 0xddaa33,
-  enemyBg: 0x553333,
-  highlight: 0xf0d060,
-  victoryGold: 0xffd700,
-  defeatRed: 0x880000,
+  bg: 0x070d16,
+  bgTop: 0x10182a,
+  bgBottom: 0x090d14,
+  panel: 0x10192a,
+  panelAlt: 0x172338,
+  panelStroke: 0x5a86ba,
+  cardBg: 0xf7f1e7,
+  cardShadow: 0x06080d,
+  cardBorder: 0x1f1914,
+  attack: 0xd95757,
+  skill: 0x57a8d9,
+  power: 0xd49a49,
+  status: 0x8c88a0,
+  heal: 0x53b889,
+  hp: 0xe06464,
+  hpBg: 0x3e1420,
+  block: 0x58a7d1,
+  energy: 0xf2c14f,
+  energyCore: 0x6c3d00,
+  enemyBg: 0x311824,
+  enemyAura: 0xb04362,
+  enemyPanel: 0x1c1118,
+  highlight: 0xf2c14f,
+  accentBlue: 0x71b6ff,
+  accentGold: 0xf6d37a,
+  accentCream: 0xf9edd7,
+  textLight: 0xf5eee3,
+  textMuted: 0xb3bfd3,
+  victoryGold: 0xffd76a,
+  defeatRed: 0xa51f2d,
 };
 
 const TYPE_COLORS: Record<string, string> = {
-  ATTACK: '#cc4444',
-  SKILL: '#4488aa',
-  POWER: '#bb8833',
-  STATUS: '#888888',
-  HEAL: '#44aa66',
+  ATTACK: '#d95757',
+  SKILL: '#57a8d9',
+  POWER: '#d49a49',
+  STATUS: '#8c88a0',
+  HEAL: '#53b889',
 };
 
 const TYPE_LABELS: Record<string, string> = {
@@ -69,7 +86,8 @@ export class CombatScene extends Phaser.Scene {
     const dpr = Math.max(window.devicePixelRatio || 1, 2);
     const origAddText = this.add.text.bind(this.add);
     const patchedAddText = (
-      x: number, y: number,
+      x: number,
+      y: number,
       text: string | string[],
       style?: Phaser.Types.GameObjects.Text.TextStyle,
     ): Phaser.GameObjects.Text => {
@@ -97,92 +115,190 @@ export class CombatScene extends Phaser.Scene {
   // ==================== 背景布局 ====================
 
   private drawBattleField(): void {
-    // 敌人区域
-    this.add.rectangle(W / 2, 120, W - 40, 200, 0xe8e3db, 0.4)
-      .setStrokeStyle(1, 0xcccccc);
-    // 分隔线
-    const line = this.add.graphics();
-    line.lineStyle(1, 0x3a3a3a, 0.3);
-    line.lineBetween(30, 260, W - 30, 260);
-    // 手牌区域
-    this.add.rectangle(W / 2, H - 100, W - 40, 190, 0xeae5dd, 0.3)
-      .setStrokeStyle(1, 0xcccccc);
+    const bg = this.add.graphics();
+    bg.fillGradientStyle(COLORS.bgTop, COLORS.bgTop, COLORS.bgBottom, COLORS.bgBottom, 1);
+    bg.fillRect(0, 0, W, H);
+    bg.fillStyle(0x20304d, 0.18);
+    bg.fillCircle(170, 120, 180);
+    bg.fillStyle(0x4e1f32, 0.2);
+    bg.fillCircle(W - 150, 160, 220);
+    bg.fillStyle(0x152235, 0.94);
+    bg.fillEllipse(W / 2, 148, 780, 250);
+    bg.fillStyle(0x0c121d, 0.9);
+    bg.fillEllipse(W / 2, H - 88, 860, 210);
+    bg.lineStyle(2, 0x3a5375, 0.32);
+    bg.strokeEllipse(W / 2, 148, 780, 250);
+    bg.lineStyle(1, 0xf2c14f, 0.16);
+    bg.lineBetween(48, 266, W - 48, 266);
+    bg.lineStyle(1, 0x2f4766, 0.18);
+    for (let x = 80; x < W; x += 80) {
+      bg.lineBetween(x, 280, x - 40, H - 10);
+    }
+
+    this.add
+      .text(W / 2, 38, 'BATTLE STAGE', {
+        fontSize: '14px',
+        color: '#d5b980',
+        fontFamily: UI_FONT,
+        letterSpacing: 8,
+      })
+      .setOrigin(0.5)
+      .setAlpha(0.72);
+
+    this.add
+      .text(W / 2, 287, 'Hand / Tactics', {
+        fontSize: '12px',
+        color: '#9fb1cb',
+        fontFamily: UI_FONT,
+        letterSpacing: 4,
+      })
+      .setOrigin(0.5)
+      .setAlpha(0.65);
   }
 
   // ==================== UI 创建 ====================
 
   private createUI(): void {
-    // 项目健康度标签
-    this.uiTexts.hpLabel = this.add.text(30, 8, '', {
-      fontSize: '15px', color: '#cc4444', fontFamily: 'Courier New',
+    this.add.rectangle(176, 54, 316, 104, 0x050a12, 0.32);
+    this.add
+      .rectangle(172, 50, 316, 104, COLORS.panel, 0.84)
+      .setStrokeStyle(2, COLORS.panelStroke, 0.85);
+    this.add.text(42, 18, '项目状态', {
+      fontSize: '13px',
+      color: '#d8bc84',
+      fontFamily: UI_FONT,
+      letterSpacing: 3,
     });
-    // HP 条背景
-    this.add.rectangle(30, 34, 200, 12, COLORS.hpBg).setOrigin(0, 0.5);
-    this.hpFillRect = this.add.rectangle(30, 34, 200, 12, COLORS.hp).setOrigin(0, 0.5);
-
-    // 护甲
-    this.uiTexts.block = this.add.text(250, 8, '', {
-      fontSize: '15px', color: '#4488aa', fontFamily: 'Courier New',
+    this.uiTexts.hpLabel = this.add.text(42, 36, '', {
+      fontSize: '18px',
+      color: '#ffe2dc',
+      fontFamily: MONO_FONT,
+      fontStyle: 'bold',
+    });
+    this.add.rectangle(42, 84, 236, 12, COLORS.hpBg).setOrigin(0, 0.5);
+    this.hpFillRect = this.add.rectangle(42, 84, 236, 12, COLORS.hp).setOrigin(0, 0.5);
+    this.uiTexts.block = this.add.text(42, 56, '', {
+      fontSize: '14px',
+      color: '#9fd7ff',
+      fontFamily: MONO_FONT,
+    });
+    this.playerBuffsText = this.add.text(150, 56, '', {
+      fontSize: '11px',
+      color: '#aebbd0',
+      fontFamily: UI_FONT,
+      wordWrap: { width: 150 },
     });
 
-    // Buff 显示
-    this.playerBuffsText = this.add.text(250, 28, '', {
-      fontSize: '11px', color: '#666', fontFamily: 'Arial',
-    });
+    this.add.rectangle(W / 2, 50, 152, 56, 0x050a12, 0.28);
+    this.add
+      .rectangle(W / 2, 48, 152, 56, COLORS.panelAlt, 0.88)
+      .setStrokeStyle(2, COLORS.highlight, 0.72);
+    this.add
+      .text(W / 2, 31, 'TURN', {
+        fontSize: '11px',
+        color: '#d8bc84',
+        fontFamily: UI_FONT,
+        letterSpacing: 4,
+      })
+      .setOrigin(0.5);
+    this.uiTexts.turn = this.add
+      .text(W / 2, 45, '', {
+        fontSize: '18px',
+        color: '#f9edd7',
+        fontFamily: MONO_FONT,
+        fontStyle: 'bold',
+      })
+      .setOrigin(0.5, 0);
 
-    // 能量（左下角大字）
-    this.uiTexts.energy = this.add.text(40, H - 210, '', {
-      fontSize: '32px', color: '#ddaa33', fontFamily: 'Courier New', fontStyle: 'bold',
-    });
+    this.add.rectangle(98, H - 206, 132, 88, 0x050a12, 0.28);
+    this.add
+      .rectangle(94, H - 210, 132, 88, COLORS.panelAlt, 0.88)
+      .setStrokeStyle(2, COLORS.energy, 0.75);
+    this.add
+      .text(94, H - 237, 'ENERGY', {
+        fontSize: '11px',
+        color: '#d8bc84',
+        fontFamily: UI_FONT,
+        letterSpacing: 4,
+      })
+      .setOrigin(0.5);
+    this.uiTexts.energy = this.add
+      .text(94, H - 224, '', {
+        fontSize: '38px',
+        color: '#ffd974',
+        fontFamily: MONO_FONT,
+        fontStyle: 'bold',
+        stroke: '#4a2d00',
+        strokeThickness: 2,
+      })
+      .setOrigin(0.5, 0);
 
-    // 牌库计数（可点击）
-    this.uiTexts.drawPile = this.add.text(30, H - 25, '', {
-      fontSize: '13px', color: '#555', fontFamily: 'Courier New',
-    }).setInteractive({ useHandCursor: true });
+    const pilePanelY = H - 26;
+    this.add.rectangle(W / 2, pilePanelY, 360, 34, 0x050a12, 0.24);
+    this.add
+      .rectangle(W / 2, pilePanelY, 360, 34, COLORS.panel, 0.84)
+      .setStrokeStyle(1, COLORS.panelStroke, 0.5);
+
+    this.uiTexts.drawPile = this.add
+      .text(128, H - 33, '', {
+        fontSize: '13px',
+        color: '#d3dded',
+        fontFamily: MONO_FONT,
+      })
+      .setInteractive({ useHandCursor: true });
     this.uiTexts.drawPile.on('pointerdown', () => this.showPileViewer('drawPile'));
-    this.uiTexts.drawPile.on('pointerover', () => this.uiTexts.drawPile.setColor('#2266aa'));
-    this.uiTexts.drawPile.on('pointerout', () => this.uiTexts.drawPile.setColor('#555'));
+    this.uiTexts.drawPile.on('pointerover', () => this.uiTexts.drawPile.setColor('#ffe7a4'));
+    this.uiTexts.drawPile.on('pointerout', () => this.uiTexts.drawPile.setColor('#d3dded'));
 
-    // 弃牌堆计数（可点击）
-    this.uiTexts.discardPile = this.add.text(W - 140, H - 25, '', {
-      fontSize: '13px', color: '#555', fontFamily: 'Courier New',
-    }).setInteractive({ useHandCursor: true });
-    this.uiTexts.discardPile.on('pointerdown', () => this.showPileViewer('discardPile'));
-    this.uiTexts.discardPile.on('pointerover', () => this.uiTexts.discardPile.setColor('#2266aa'));
-    this.uiTexts.discardPile.on('pointerout', () => this.uiTexts.discardPile.setColor('#555'));
-
-    // 消耗堆计数（可点击）
-    this.uiTexts.exhaustPile = this.add.text(W / 2 - 40, H - 25, '', {
-      fontSize: '13px', color: '#555', fontFamily: 'Courier New',
-    }).setInteractive({ useHandCursor: true });
+    this.uiTexts.exhaustPile = this.add
+      .text(W / 2 - 52, H - 33, '', {
+        fontSize: '13px',
+        color: '#d3dded',
+        fontFamily: MONO_FONT,
+      })
+      .setInteractive({ useHandCursor: true });
     this.uiTexts.exhaustPile.on('pointerdown', () => this.showPileViewer('exhaustPile'));
-    this.uiTexts.exhaustPile.on('pointerover', () => this.uiTexts.exhaustPile.setColor('#2266aa'));
-    this.uiTexts.exhaustPile.on('pointerout', () => this.uiTexts.exhaustPile.setColor('#555'));
+    this.uiTexts.exhaustPile.on('pointerover', () => this.uiTexts.exhaustPile.setColor('#ffe7a4'));
+    this.uiTexts.exhaustPile.on('pointerout', () => this.uiTexts.exhaustPile.setColor('#d3dded'));
 
-    // 回合数
-    this.uiTexts.turn = this.add.text(W / 2, 8, '', {
-      fontSize: '13px', color: '#888', fontFamily: 'Courier New',
-    }).setOrigin(0.5, 0);
+    this.uiTexts.discardPile = this.add
+      .text(W - 200, H - 33, '', {
+        fontSize: '13px',
+        color: '#d3dded',
+        fontFamily: MONO_FONT,
+      })
+      .setOrigin(0.5, 0);
+    this.uiTexts.discardPile.setInteractive({ useHandCursor: true });
+    this.uiTexts.discardPile.on('pointerdown', () => this.showPileViewer('discardPile'));
+    this.uiTexts.discardPile.on('pointerover', () => this.uiTexts.discardPile.setColor('#ffe7a4'));
+    this.uiTexts.discardPile.on('pointerout', () => this.uiTexts.discardPile.setColor('#d3dded'));
 
-    // 结束回合按钮
-    this.endTurnBtn = this.add.container(W - 80, H - 215);
-    const btnBg = this.add.rectangle(0, 0, 120, 42, COLORS.highlight)
-      .setStrokeStyle(2, COLORS.cardBorder);
-    const btnText = this.add.text(0, 0, '结束回合', {
-      fontSize: '15px', color: '#2c2c2c', fontFamily: 'Arial', fontStyle: 'bold',
-    }).setOrigin(0.5);
-    this.endTurnBtn.add([btnBg, btnText]);
-    this.endTurnBtn.setSize(120, 42);
+    this.endTurnBtn = this.add.container(W - 118, H - 210);
+    const btnShadow = this.add.rectangle(4, 4, 150, 54, 0x000000, 0.24);
+    const btnBg = this.add
+      .rectangle(0, 0, 150, 54, 0x2a1a0f)
+      .setStrokeStyle(2, COLORS.highlight, 0.9);
+    const btnAccent = this.add.rectangle(0, -22, 146, 8, COLORS.highlight, 0.9);
+    const btnText = this.add
+      .text(0, 0, '结束回合', {
+        fontSize: '16px',
+        color: '#fff0c6',
+        fontFamily: UI_FONT,
+        fontStyle: 'bold',
+      })
+      .setOrigin(0.5);
+    this.endTurnBtn.add([btnShadow, btnBg, btnAccent, btnText]);
+    this.endTurnBtn.setSize(150, 54);
     this.endTurnBtn.setInteractive({ useHandCursor: true });
     this.endTurnBtn.on('pointerdown', () => {
       if (!this.isAnimating) this.onEndTurn();
     });
     this.endTurnBtn.on('pointerover', () => {
-      btnBg.setFillStyle(0xf5dd77);
+      btnBg.setFillStyle(0x3a2414);
       this.tweens.add({ targets: this.endTurnBtn, scaleX: 1.05, scaleY: 1.05, duration: 100 });
     });
     this.endTurnBtn.on('pointerout', () => {
-      btnBg.setFillStyle(COLORS.highlight);
+      btnBg.setFillStyle(0x2a1a0f);
       this.tweens.add({ targets: this.endTurnBtn, scaleX: 1, scaleY: 1, duration: 100 });
     });
   }
@@ -201,41 +317,43 @@ export class CombatScene extends Phaser.Scene {
     const cs = combatManager.getState();
     if (!cs) return;
 
-    this.uiTexts.hpLabel.setText(`项目HP: ${cs.playerHp}/${cs.playerMaxHp}`);
+    this.uiTexts.hpLabel.setText(`项目 HP ${cs.playerHp}/${cs.playerMaxHp}`);
     const hpRatio = Math.max(0, cs.playerHp / cs.playerMaxHp);
-    this.hpFillRect.width = 200 * hpRatio;
+    this.hpFillRect.width = 236 * hpRatio;
     if (hpRatio < 0.3) this.hpFillRect.setFillStyle(0xff3333);
     else if (hpRatio < 0.6) this.hpFillRect.setFillStyle(0xdd8833);
     else this.hpFillRect.setFillStyle(COLORS.hp);
 
-    this.uiTexts.block.setText(cs.playerBlock > 0 ? `护甲: ${cs.playerBlock}` : '');
+    this.uiTexts.block.setText(cs.playerBlock > 0 ? `护甲 ${cs.playerBlock}` : '护甲 0');
     this.uiTexts.energy.setText(`${cs.energy}/${cs.maxEnergy}`);
-    this.uiTexts.drawPile.setText(`[牌库 ${cs.drawPile.length}]`);
-    this.uiTexts.discardPile.setText(`[弃牌 ${cs.discardPile.length}]`);
-    this.uiTexts.exhaustPile.setText(cs.exhaustPile.length > 0 ? `[消耗 ${cs.exhaustPile.length}]` : '');
+    this.uiTexts.drawPile.setText(`牌库 ${cs.drawPile.length}`);
+    this.uiTexts.discardPile.setText(`弃牌 ${cs.discardPile.length}`);
+    this.uiTexts.exhaustPile.setText(`消耗 ${cs.exhaustPile.length}`);
     this.uiTexts.turn.setText(`回合 ${cs.turn}`);
 
     // Buff 列表
-    const buffStrs = cs.playerBuffs.map(b => {
-      const bd = kernel.getDataStore().buffs.get(b.dataId);
-      if (!bd) return '';
-      const icon = bd.type === 'POSITIVE' ? '+' : '-';
-      return `${icon}${bd.name}${b.stacks > 1 ? 'x' + b.stacks : ''}`;
-    }).filter(Boolean);
-    this.playerBuffsText.setText(buffStrs.join('  '));
+    const buffStrs = cs.playerBuffs
+      .map((b) => {
+        const bd = kernel.getDataStore().buffs.get(b.dataId);
+        if (!bd) return '';
+        const icon = bd.type === 'POSITIVE' ? '+' : '-';
+        return `${icon}${bd.name}${b.stacks > 1 ? 'x' + b.stacks : ''}`;
+      })
+      .filter(Boolean);
+    this.playerBuffsText.setText(buffStrs.length > 0 ? buffStrs.join('  ') : '无额外效果');
   }
 
   // ==================== 敌人渲染 ====================
 
   private renderEnemies(enemies: EnemyInstance[]): void {
-    this.enemyContainers.forEach(c => c.destroy());
+    this.enemyContainers.forEach((c) => c.destroy());
     this.enemyContainers = [];
 
-    const alive = enemies.filter(e => e.hp > 0);
+    const alive = enemies.filter((e) => e.hp > 0);
     if (alive.length === 0) return;
 
     const spacing = Math.min(220, (W - 120) / alive.length);
-    const startX = W / 2 - (alive.length - 1) * spacing / 2;
+    const startX = W / 2 - ((alive.length - 1) * spacing) / 2;
 
     let aliveIdx = 0;
     enemies.forEach((enemy, realIndex) => {
@@ -249,66 +367,110 @@ export class CombatScene extends Phaser.Scene {
 
       const container = this.add.container(x, y);
 
-      // 身体
+      const aura = this.add.circle(0, 0, 62, COLORS.enemyAura, 0.18);
+      const shadow = this.add.ellipse(0, 68, 104, 22, 0x000000, 0.24);
       const body = this.add.circle(0, 0, 44, COLORS.enemyBg);
-      body.setStrokeStyle(2, COLORS.cardBorder);
+      body.setStrokeStyle(3, 0xb97393);
+      const innerRing = this.add.circle(0, 0, 36, 0x4f2435, 0.42).setStrokeStyle(1, 0xffd6e1, 0.25);
 
       // 首字
-      const initial = this.add.text(0, -2, eData.name[0], {
-        fontSize: '30px', color: '#ffffff', fontFamily: 'Arial', fontStyle: 'bold',
-      }).setOrigin(0.5);
+      const initial = this.add
+        .text(0, -2, eData.name[0], {
+          fontSize: '30px',
+          color: '#fff3ea',
+          fontFamily: TITLE_FONT,
+          fontStyle: 'bold',
+        })
+        .setOrigin(0.5);
 
       // 名字
-      const nameText = this.add.text(0, 54, eData.name, {
-        fontSize: '13px', color: '#2c2c2c', fontFamily: 'Arial',
-      }).setOrigin(0.5);
+      const nameText = this.add
+        .text(0, 54, eData.name, {
+          fontSize: '14px',
+          color: '#f5eee3',
+          fontFamily: UI_FONT,
+          fontStyle: 'bold',
+        })
+        .setOrigin(0.5);
 
-      // HP条
-      this.add.rectangle(0, 72, 90, 10, COLORS.hpBg).setOrigin(0.5);
+      // HP条与信息板
+      const infoPanel = this.add
+        .rectangle(0, 84, 116, 44, COLORS.enemyPanel, 0.86)
+        .setStrokeStyle(1, 0x6a4560, 0.85);
+      this.add.rectangle(0, 74, 90, 10, COLORS.hpBg).setOrigin(0.5);
       const hpRatio = enemy.hp / enemy.maxHp;
-      const hpFill = this.add.rectangle(-45 * (1 - hpRatio), 72, 90 * hpRatio, 10,
-        hpRatio > 0.5 ? COLORS.hp : 0xff5533).setOrigin(0, 0.5);
+      const hpFill = this.add
+        .rectangle(-45 * (1 - hpRatio), 74, 90 * hpRatio, 10, hpRatio > 0.5 ? COLORS.hp : 0xff5533)
+        .setOrigin(0, 0.5);
 
-      const hpText = this.add.text(0, 86, `${enemy.hp}/${enemy.maxHp}`, {
-        fontSize: '11px', color: '#cc4444', fontFamily: 'Courier New',
-      }).setOrigin(0.5);
+      const hpText = this.add
+        .text(0, 90, `${enemy.hp}/${enemy.maxHp}`, {
+          fontSize: '11px',
+          color: '#ffd9d6',
+          fontFamily: MONO_FONT,
+        })
+        .setOrigin(0.5);
 
-      container.add([body, initial, nameText, hpFill, hpText]);
+      container.add([aura, shadow, body, innerRing, initial, nameText, infoPanel, hpFill, hpText]);
 
       // 护甲
       if (enemy.block > 0) {
-        const blockBg = this.add.circle(48, -28, 14, COLORS.block, 0.8);
-        const blockTxt = this.add.text(48, -28, `${enemy.block}`, {
-          fontSize: '12px', color: '#fff', fontFamily: 'Courier New', fontStyle: 'bold',
-        }).setOrigin(0.5);
+        const blockBg = this.add.circle(52, -30, 15, COLORS.block, 0.92);
+        const blockTxt = this.add
+          .text(52, -30, `${enemy.block}`, {
+            fontSize: '12px',
+            color: '#fff',
+            fontFamily: MONO_FONT,
+            fontStyle: 'bold',
+          })
+          .setOrigin(0.5);
         container.add([blockBg, blockTxt]);
       }
 
       // 意图（上方气泡）
       const intent = combatManager.getEnemyIntent(realIndex);
       if (intent) {
-        const intentBubble = this.add.rectangle(0, -70, 60, 28, 0xffffff, 0.9)
-          .setStrokeStyle(1, 0xaaaaaa);
-        const intentIcon = intent.type === 'ATTACK' ? '⚔' :
-                          intent.type === 'DEFEND' ? '🛡' :
-                          intent.type === 'BUFF_SELF' ? '💪' : '☠';
-        const intentTxt = this.add.text(0, -70, `${intentIcon}${intent.value}`, {
-          fontSize: '13px', color: intent.type === 'ATTACK' ? '#cc3333' : '#3366aa',
-          fontFamily: 'Courier New', fontStyle: 'bold',
-        }).setOrigin(0.5);
+        const intentBubble = this.add
+          .rectangle(0, -78, 86, 34, 0xfff7ea, 0.94)
+          .setStrokeStyle(2, intent.type === 'ATTACK' ? COLORS.attack : COLORS.skill, 0.9);
+        const intentIcon =
+          intent.type === 'ATTACK'
+            ? '⚔'
+            : intent.type === 'DEFEND'
+              ? '🛡'
+              : intent.type === 'BUFF_SELF'
+                ? '💪'
+                : '☠';
+        const intentTxt = this.add
+          .text(0, -78, `${intentIcon} ${intent.value}`, {
+            fontSize: '13px',
+            color: intent.type === 'ATTACK' ? '#cc3333' : '#2d5f92',
+            fontFamily: MONO_FONT,
+            fontStyle: 'bold',
+          })
+          .setOrigin(0.5);
         container.add([intentBubble, intentTxt]);
       }
 
       // Buff 显示
       if (enemy.buffs.length > 0) {
-        const buffStr = enemy.buffs.map(b => {
-          const bd = kernel.getDataStore().buffs.get(b.dataId);
-          return bd ? `${bd.name}${b.stacks > 1 ? 'x' + b.stacks : ''}` : '';
-        }).filter(Boolean).join(' ');
+        const buffStr = enemy.buffs
+          .map((b) => {
+            const bd = kernel.getDataStore().buffs.get(b.dataId);
+            return bd ? `${bd.name}${b.stacks > 1 ? 'x' + b.stacks : ''}` : '';
+          })
+          .filter(Boolean)
+          .join(' ');
         if (buffStr) {
-          container.add(this.add.text(0, 100, buffStr, {
-            fontSize: '10px', color: '#888', fontFamily: 'Arial',
-          }).setOrigin(0.5));
+          container.add(
+            this.add
+              .text(0, 100, buffStr, {
+                fontSize: '10px',
+                color: '#c4b7c3',
+                fontFamily: UI_FONT,
+              })
+              .setOrigin(0.5),
+          );
         }
       }
 
@@ -324,9 +486,15 @@ export class CombatScene extends Phaser.Scene {
         }
       });
       body.on('pointerover', () => {
-        if (this.selectedCardIndex >= 0) body.setStrokeStyle(3, COLORS.highlight);
+        aura.setScale(1.08);
+        aura.setAlpha(0.28);
+        if (this.selectedCardIndex >= 0) body.setStrokeStyle(4, COLORS.highlight);
       });
-      body.on('pointerout', () => body.setStrokeStyle(2, COLORS.cardBorder));
+      body.on('pointerout', () => {
+        aura.setScale(1);
+        aura.setAlpha(0.18);
+        body.setStrokeStyle(3, 0xb97393);
+      });
 
       this.enemyContainers.push(container);
     });
@@ -335,7 +503,7 @@ export class CombatScene extends Phaser.Scene {
   // ==================== 手牌渲染 ====================
 
   private renderHand(hand: CardInstance[]): void {
-    this.cardSprites.forEach(c => c.destroy());
+    this.cardSprites.forEach((c) => c.destroy());
     this.cardSprites = [];
     this.selectedCardIndex = -1;
     if (hand.length === 0) return;
@@ -343,7 +511,7 @@ export class CombatScene extends Phaser.Scene {
     const cardW = 105;
     const cardH = 145;
     const maxTotalWidth = W - 200;
-    const overlap = Math.max(cardW * 0.3, cardW - (maxTotalWidth / hand.length));
+    const overlap = Math.max(cardW * 0.3, cardW - maxTotalWidth / hand.length);
     const effectiveSpacing = cardW - overlap;
     const totalWidth = effectiveSpacing * (hand.length - 1) + cardW;
     const startX = (W - totalWidth) / 2 + cardW / 2;
@@ -371,52 +539,102 @@ export class CombatScene extends Phaser.Scene {
   }
 
   private createCardVisual(
-    cardData: CardData, x: number, y: number,
-    w: number, h: number, index: number, currentEnergy: number,
+    cardData: CardData,
+    x: number,
+    y: number,
+    w: number,
+    h: number,
+    index: number,
+    currentEnergy: number,
   ): Phaser.GameObjects.Container {
     const container = this.add.container(x, y);
     const canPlay = !cardData.unplayable && currentEnergy >= cardData.cost;
 
-    const isHeal = cardData.effects.some(e => e.type === 'HEAL');
-    const typeColor = isHeal ? COLORS.heal :
-                      cardData.type === 'ATTACK' ? COLORS.attack :
-                      cardData.type === 'SKILL' ? COLORS.skill :
-                      cardData.type === 'POWER' ? COLORS.power : COLORS.status;
+    const isHeal = cardData.effects.some((e) => e.type === 'HEAL');
+    const typeColor = isHeal
+      ? COLORS.heal
+      : cardData.type === 'ATTACK'
+        ? COLORS.attack
+        : cardData.type === 'SKILL'
+          ? COLORS.skill
+          : cardData.type === 'POWER'
+            ? COLORS.power
+            : COLORS.status;
 
-    // 卡牌阴影
-    const shadow = this.add.rectangle(3, 3, w, h, 0x000000, 0.15).setOrigin(0.5);
-
-    // 卡牌背景
+    const shadow = this.add.rectangle(5, 8, w, h, COLORS.cardShadow, 0.2).setOrigin(0.5);
+    const glow = this.add
+      .rectangle(0, 0, w + 8, h + 8, typeColor, canPlay ? 0.08 : 0.03)
+      .setOrigin(0.5);
     const bg = this.add.rectangle(0, 0, w, h, canPlay ? COLORS.cardBg : 0xe8e3db);
-    bg.setStrokeStyle(2, typeColor);
+    bg.setStrokeStyle(2, typeColor, canPlay ? 1 : 0.5);
+    const topBar = this.add.rectangle(0, -h / 2 + 10, w - 10, 10, typeColor).setOrigin(0.5, 0.5);
+    const footerBar = this.add.rectangle(0, h / 2 - 12, w - 12, 18, 0x140f0b, 0.08).setOrigin(0.5);
 
-    // 顶部色条
-    const topBar = this.add.rectangle(0, -h / 2 + 3, w - 4, 6, typeColor).setOrigin(0.5, 0);
+    const costCircle = this.add.circle(-w / 2 + 19, -h / 2 + 19, 14, typeColor);
+    const costText = this.add
+      .text(-w / 2 + 19, -h / 2 + 19, `${cardData.cost}`, {
+        fontSize: '15px',
+        color: '#ffffff',
+        fontFamily: MONO_FONT,
+        fontStyle: 'bold',
+      })
+      .setOrigin(0.5);
 
-    // 费用
-    const costCircle = this.add.circle(-w / 2 + 16, -h / 2 + 16, 13, typeColor);
-    const costText = this.add.text(-w / 2 + 16, -h / 2 + 16, `${cardData.cost}`, {
-      fontSize: '15px', color: '#ffffff', fontFamily: 'Courier New', fontStyle: 'bold',
-    }).setOrigin(0.5);
+    const nameText = this.add
+      .text(0, -h / 2 + 36, cardData.name, {
+        fontSize: '12px',
+        color: '#2c2c2c',
+        fontFamily: UI_FONT,
+        fontStyle: 'bold',
+        wordWrap: { width: w - 24 },
+        align: 'center',
+      })
+      .setOrigin(0.5);
 
-    // 卡名
-    const nameText = this.add.text(8, -h / 2 + 16, cardData.name, {
-      fontSize: '11px', color: '#2c2c2c', fontFamily: 'Arial', fontStyle: 'bold',
-    }).setOrigin(0, 0.5);
+    const typeIcon =
+      cardData.type === 'ATTACK'
+        ? '⚔️'
+        : cardData.type === 'SKILL'
+          ? '🛡'
+          : cardData.type === 'POWER'
+            ? '⭐'
+            : '⚠️';
+    const iconGlow = this.add.circle(0, 2, 28, typeColor, 0.12);
+    const icon = this.add.text(0, 2, typeIcon, { fontSize: '28px' }).setOrigin(0.5);
+    const typeLabel = isHeal ? '恢复' : TYPE_LABELS[cardData.type] || cardData.type;
+    const typeText = this.add
+      .text(0, h / 2 - 12, typeLabel, {
+        fontSize: '10px',
+        color: '#5e5548',
+        fontFamily: UI_FONT,
+        letterSpacing: 1,
+      })
+      .setOrigin(0.5);
 
-    // 类型图标
-    const typeIcon = cardData.type === 'ATTACK' ? '⚔️' :
-                     cardData.type === 'SKILL' ? '🛡' :
-                     cardData.type === 'POWER' ? '⭐' : '⚠️';
-    const icon = this.add.text(0, 5, typeIcon, { fontSize: '28px' }).setOrigin(0.5);
+    const desc = this.add
+      .text(0, h / 2 - 36, cardData.description, {
+        fontSize: '9px',
+        color: '#555',
+        fontFamily: UI_FONT,
+        wordWrap: { width: w - 14 },
+        align: 'center',
+      })
+      .setOrigin(0.5);
 
-    // 描述
-    const desc = this.add.text(0, h / 2 - 28, cardData.description, {
-      fontSize: '9px', color: '#555', fontFamily: 'Arial',
-      wordWrap: { width: w - 14 }, align: 'center',
-    }).setOrigin(0.5);
-
-    container.add([shadow, bg, topBar, costCircle, costText, nameText, icon, desc]);
+    container.add([
+      shadow,
+      glow,
+      bg,
+      topBar,
+      footerBar,
+      costCircle,
+      costText,
+      nameText,
+      iconGlow,
+      icon,
+      desc,
+      typeText,
+    ]);
     container.setSize(w, h);
 
     // 不可用遮罩
@@ -433,11 +651,14 @@ export class CombatScene extends Phaser.Scene {
         container.setDepth(100);
         this.tweens.add({
           targets: container,
-          y: y - 40,
-          scaleX: 1.2, scaleY: 1.2,
+          y: y - 48,
+          scaleX: 1.18,
+          scaleY: 1.18,
           rotation: 0,
-          duration: 150, ease: 'Back.easeOut',
+          duration: 150,
+          ease: 'Back.easeOut',
         });
+        this.tweens.add({ targets: glow, alpha: 0.18, duration: 120 });
       });
 
       bg.on('pointerout', () => {
@@ -447,11 +668,14 @@ export class CombatScene extends Phaser.Scene {
         if (this.selectedCardIndex !== index) {
           this.tweens.add({
             targets: container,
-            y: y, scaleX: 1, scaleY: 1,
+            y: y,
+            scaleX: 1,
+            scaleY: 1,
             rotation: offsetFromMid * 0.02,
             duration: 150,
           });
         }
+        this.tweens.add({ targets: glow, alpha: canPlay ? 0.08 : 0.03, duration: 120 });
       });
 
       bg.on('pointerdown', () => {
@@ -459,13 +683,13 @@ export class CombatScene extends Phaser.Scene {
         const cs = combatManager.getState();
         if (!cs) return;
 
-        const aliveEnemies = cs.enemies.filter(e => e.hp > 0);
+        const aliveEnemies = cs.enemies.filter((e) => e.hp > 0);
 
         // 如果是技能/能力牌（无需选目标）或只有一个敌人
         if (cardData.type !== 'ATTACK' || aliveEnemies.length <= 1) {
           this.selectedCardIndex = index;
           // 找到第一个存活敌人的真实索引
-          const firstAliveIdx = cs.enemies.findIndex(e => e.hp > 0);
+          const firstAliveIdx = cs.enemies.findIndex((e) => e.hp > 0);
           this.playSelectedCard(firstAliveIdx >= 0 ? firstAliveIdx : 0);
         } else {
           // 选中卡牌，等待选目标
@@ -489,10 +713,15 @@ export class CombatScene extends Phaser.Scene {
       const cData = kernel.getDataStore().cards.get(cs.hand[ci]?.dataId || '');
       if (cData && cardBg) {
         const isH = cData.effects.some((e: { type: string }) => e.type === 'HEAL');
-        const color = isH ? COLORS.heal :
-                      cData.type === 'ATTACK' ? COLORS.attack :
-                      cData.type === 'SKILL' ? COLORS.skill :
-                      cData.type === 'POWER' ? COLORS.power : COLORS.status;
+        const color = isH
+          ? COLORS.heal
+          : cData.type === 'ATTACK'
+            ? COLORS.attack
+            : cData.type === 'SKILL'
+              ? COLORS.skill
+              : cData.type === 'POWER'
+                ? COLORS.power
+                : COLORS.status;
         cardBg.setStrokeStyle(2, color);
       }
     });
@@ -502,10 +731,17 @@ export class CombatScene extends Phaser.Scene {
 
   private showTargetHint(): void {
     this.hideTargetHint();
-    this.targetHintText = this.add.text(W / 2, 250, '点击一个敌人作为目标', {
-      fontSize: '16px', color: '#ddaa33', fontFamily: 'Arial', fontStyle: 'bold',
-      stroke: '#000000', strokeThickness: 2,
-    }).setOrigin(0.5).setDepth(300);
+    this.targetHintText = this.add
+      .text(W / 2, 250, '点击一个敌人作为目标', {
+        fontSize: '16px',
+        color: '#ffe09a',
+        fontFamily: UI_FONT,
+        fontStyle: 'bold',
+        stroke: '#000000',
+        strokeThickness: 2,
+      })
+      .setOrigin(0.5)
+      .setDepth(300);
     // 闪烁动画
     this.tweens.add({
       targets: this.targetHintText,
@@ -548,10 +784,13 @@ export class CombatScene extends Phaser.Scene {
       const targetY = 200;
       this.tweens.add({
         targets: sprite,
-        y: targetY, alpha: 0,
-        scaleX: 0.6, scaleY: 0.6,
+        y: targetY,
+        alpha: 0,
+        scaleX: 0.6,
+        scaleY: 0.6,
         rotation: 0,
-        duration: 250, ease: 'Power2',
+        duration: 250,
+        ease: 'Power2',
         onComplete: () => {
           this.isAnimating = false;
           if (this.checkCombatEnd()) return;
@@ -571,16 +810,20 @@ export class CombatScene extends Phaser.Scene {
     this.isAnimating = true;
 
     // 弃牌动画：全部飞向右侧
-    const promises = this.cardSprites.map((sprite, i) =>
-      new Promise<void>(resolve => {
-        this.tweens.add({
-          targets: sprite,
-          x: W + 80, alpha: 0, rotation: 0.3,
-          duration: 200, delay: i * 40,
-          ease: 'Power2',
-          onComplete: () => resolve(),
-        });
-      })
+    const promises = this.cardSprites.map(
+      (sprite, i) =>
+        new Promise<void>((resolve) => {
+          this.tweens.add({
+            targets: sprite,
+            x: W + 80,
+            alpha: 0,
+            rotation: 0.3,
+            duration: 200,
+            delay: i * 40,
+            ease: 'Power2',
+            onComplete: () => resolve(),
+          });
+        }),
     );
 
     Promise.all(promises).then(() => {
@@ -602,21 +845,27 @@ export class CombatScene extends Phaser.Scene {
 
   private playEnemyAttackAnimation(callback: () => void): void {
     const cs = combatManager.getState();
-    if (!cs) { callback(); return; }
+    if (!cs) {
+      callback();
+      return;
+    }
 
     // 敌人容器冲向玩家方向
     const animations: Promise<void>[] = [];
     this.enemyContainers.forEach((container) => {
-      animations.push(new Promise<void>(resolve => {
-        const origY = container.y;
-        this.tweens.add({
-          targets: container,
-          y: origY + 30,
-          duration: 150, ease: 'Power2',
-          yoyo: true,
-          onComplete: () => resolve(),
-        });
-      }));
+      animations.push(
+        new Promise<void>((resolve) => {
+          const origY = container.y;
+          this.tweens.add({
+            targets: container,
+            y: origY + 30,
+            duration: 150,
+            ease: 'Power2',
+            yoyo: true,
+            onComplete: () => resolve(),
+          });
+        }),
+      );
     });
 
     // 屏幕震动
@@ -653,19 +902,26 @@ export class CombatScene extends Phaser.Scene {
     this.showCardListOverlay(title, pile);
   }
 
-  private showEnemyInfo(enemy: EnemyInstance, eData: { name: string; description?: string; maxHp: number; passiveAbility?: string }): void {
+  private showEnemyInfo(
+    enemy: EnemyInstance,
+    eData: { name: string; description?: string; maxHp: number; passiveAbility?: string },
+  ): void {
     const cs = combatManager.getState();
     if (!cs) return;
     const enemyIndex = cs.enemies.indexOf(enemy);
 
-    const buffsHtml = enemy.buffs.length > 0
-      ? enemy.buffs.map(b => {
-          const bd = kernel.getDataStore().buffs.get(b.dataId);
-          if (!bd) return '';
-          const isNeg = bd.type === 'NEGATIVE';
-          return `<span style="display:inline-block;padding:2px 8px;margin:2px;border-radius:3px;font-size:12px;background:${isNeg ? '#ffdddd' : '#ddffdd'};color:${isNeg ? '#cc3333' : '#338833'};">${bd.name}${b.stacks > 1 ? ' x' + b.stacks : ''}</span>`;
-        }).filter(Boolean).join('')
-      : '<span style="color:#999;font-size:12px;">无</span>';
+    const buffsHtml =
+      enemy.buffs.length > 0
+        ? enemy.buffs
+            .map((b) => {
+              const bd = kernel.getDataStore().buffs.get(b.dataId);
+              if (!bd) return '';
+              const isNeg = bd.type === 'NEGATIVE';
+              return `<span style="display:inline-block;padding:2px 8px;margin:2px;border-radius:3px;font-size:12px;background:${isNeg ? '#ffdddd' : '#ddffdd'};color:${isNeg ? '#cc3333' : '#338833'};">${bd.name}${b.stacks > 1 ? ' x' + b.stacks : ''}</span>`;
+            })
+            .filter(Boolean)
+            .join('')
+        : '<span style="color:#999;font-size:12px;">无</span>';
 
     const passiveHtml = eData.passiveAbility
       ? `<div style="margin-top:8px;padding:8px;background:#fff3e0;border-radius:4px;border-left:3px solid #bb8833;">
@@ -680,7 +936,8 @@ export class CombatScene extends Phaser.Scene {
       : '';
 
     const overlay = document.createElement('div');
-    overlay.style.cssText = 'position:fixed;inset:0;background:rgba(0,0,0,0.5);z-index:1000;display:flex;align-items:center;justify-content:center;';
+    overlay.style.cssText =
+      'position:fixed;inset:0;background:rgba(0,0,0,0.5);z-index:1000;display:flex;align-items:center;justify-content:center;';
     overlay.innerHTML = `
       <div style="background:#f5f0e8;border:2px solid #3a3a3a;border-radius:8px;padding:20px;max-width:400px;width:90%;font-family:Arial,sans-serif;">
         <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:12px;">
@@ -716,14 +973,21 @@ export class CombatScene extends Phaser.Scene {
     }
 
     // 按类型分组
-    const groups: Record<string, Array<{ name: string; type: string; cost: number; desc: string; count: number }>> = {
-      ATTACK: [], HEAL: [], SKILL: [], POWER: [], STATUS: [],
+    const groups: Record<
+      string,
+      Array<{ name: string; type: string; cost: number; desc: string; count: number }>
+    > = {
+      ATTACK: [],
+      HEAL: [],
+      SKILL: [],
+      POWER: [],
+      STATUS: [],
     };
 
     for (const [cardId, count] of cardCounts) {
       const cd = kernel.getDataStore().cards.get(cardId);
       if (!cd) continue;
-      const isHeal = cd.effects.some(e => e.type === 'HEAL');
+      const isHeal = cd.effects.some((e) => e.type === 'HEAL');
       const groupKey = isHeal ? 'HEAL' : cd.type;
       const group = groups[groupKey] || groups.ATTACK;
       group.push({ name: cd.name, type: cd.type, cost: cd.cost, desc: cd.description, count });
@@ -738,13 +1002,17 @@ export class CombatScene extends Phaser.Scene {
       cardsHtml += `
         <div style="margin-bottom:10px;">
           <div style="font-size:13px;font-weight:bold;color:${color};border-bottom:1px solid ${color}44;padding-bottom:3px;margin-bottom:4px;">${label} (${total})</div>
-          ${items.map(c => `
+          ${items
+            .map(
+              (c) => `
             <div style="display:flex;align-items:center;gap:6px;padding:4px 6px;margin-bottom:2px;background:#fff;border-radius:3px;border-left:3px solid ${color};">
               <span style="background:${color};color:#fff;border-radius:50%;width:18px;height:18px;display:flex;align-items:center;justify-content:center;font-size:10px;flex-shrink:0;">${c.cost}</span>
               <span style="font-size:12px;font-weight:bold;flex-shrink:0;">${c.name}${c.count > 1 ? ` x${c.count}` : ''}</span>
               <span style="font-size:10px;color:#888;overflow:hidden;text-overflow:ellipsis;white-space:nowrap;">${c.desc}</span>
             </div>
-          `).join('')}
+          `,
+            )
+            .join('')}
         </div>
       `;
     }
@@ -754,7 +1022,8 @@ export class CombatScene extends Phaser.Scene {
     }
 
     const overlay = document.createElement('div');
-    overlay.style.cssText = 'position:fixed;inset:0;background:rgba(0,0,0,0.5);z-index:1000;display:flex;align-items:center;justify-content:center;';
+    overlay.style.cssText =
+      'position:fixed;inset:0;background:rgba(0,0,0,0.5);z-index:1000;display:flex;align-items:center;justify-content:center;';
     overlay.innerHTML = `
       <div style="background:#f5f0e8;border:2px solid #3a3a3a;border-radius:8px;padding:20px;max-width:500px;width:90%;max-height:70vh;display:flex;flex-direction:column;font-family:Arial,sans-serif;">
         <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:12px;">
@@ -791,42 +1060,114 @@ export class CombatScene extends Phaser.Scene {
   }
 
   private showVictory(): void {
-    // 胜利遮罩
-    const overlay = this.add.rectangle(W / 2, H / 2, W, H, 0x000000, 0)
-      .setDepth(500);
+    const overlay = this.add.rectangle(W / 2, H / 2, W, H, 0x04070d, 0).setDepth(500);
     this.tweens.add({
-      targets: overlay, alpha: 0.4, duration: 500,
+      targets: overlay,
+      alpha: 0.62,
+      duration: 500,
     });
 
-    // 胜利文字
-    const text = this.add.text(W / 2, H / 2, '胜 利', {
-      fontSize: '64px', color: '#ffd700', fontFamily: 'Arial', fontStyle: 'bold',
-      stroke: '#8B6914', strokeThickness: 4,
-    }).setOrigin(0.5).setAlpha(0).setScale(2).setDepth(501);
+    const panel = this.add
+      .rectangle(W / 2, H / 2, 420, 180, 0x15100a, 0.92)
+      .setStrokeStyle(2, COLORS.victoryGold, 0.9)
+      .setDepth(501)
+      .setAlpha(0);
+    const text = this.add
+      .text(W / 2, H / 2 - 20, '胜 利', {
+        fontSize: '64px',
+        color: '#ffd76a',
+        fontFamily: TITLE_FONT,
+        fontStyle: 'bold',
+        stroke: '#6a4d16',
+        strokeThickness: 4,
+      })
+      .setOrigin(0.5)
+      .setAlpha(0)
+      .setScale(1.6)
+      .setDepth(502);
+    const sub = this.add
+      .text(W / 2, H / 2 + 38, '本轮战斗收官，准备带着优势进入结算。', {
+        fontSize: '16px',
+        color: '#fff0c6',
+        fontFamily: UI_FONT,
+      })
+      .setOrigin(0.5)
+      .setAlpha(0)
+      .setDepth(502);
 
     this.tweens.add({
+      targets: panel,
+      alpha: 1,
+      duration: 400,
+    });
+    this.tweens.add({
       targets: text,
-      alpha: 1, scaleX: 1, scaleY: 1,
-      duration: 600, ease: 'Back.easeOut',
+      alpha: 1,
+      scaleX: 1,
+      scaleY: 1,
+      duration: 600,
+      ease: 'Back.easeOut',
+    });
+    this.tweens.add({
+      targets: sub,
+      alpha: 1,
+      duration: 500,
+      delay: 120,
     });
 
     this.time.delayedCall(1800, () => this.exitCombat());
   }
 
   private showDefeat(): void {
-    const overlay = this.add.rectangle(W / 2, H / 2, W, H, 0x330000, 0)
-      .setDepth(500);
+    const overlay = this.add.rectangle(W / 2, H / 2, W, H, 0x1a0507, 0).setDepth(500);
     this.tweens.add({
-      targets: overlay, alpha: 0.5, duration: 500,
+      targets: overlay,
+      alpha: 0.65,
+      duration: 500,
     });
 
-    const text = this.add.text(W / 2, H / 2, '项目受挫...', {
-      fontSize: '48px', color: '#ff4444', fontFamily: 'Arial', fontStyle: 'bold',
-      stroke: '#550000', strokeThickness: 3,
-    }).setOrigin(0.5).setAlpha(0).setDepth(501);
+    const panel = this.add
+      .rectangle(W / 2, H / 2, 460, 180, 0x24090d, 0.94)
+      .setStrokeStyle(2, COLORS.defeatRed, 0.9)
+      .setDepth(501)
+      .setAlpha(0);
+    const text = this.add
+      .text(W / 2, H / 2 - 18, '项目受挫', {
+        fontSize: '50px',
+        color: '#ff8c8c',
+        fontFamily: TITLE_FONT,
+        fontStyle: 'bold',
+        stroke: '#4a080d',
+        strokeThickness: 3,
+      })
+      .setOrigin(0.5)
+      .setAlpha(0)
+      .setDepth(502);
+    const sub = this.add
+      .text(W / 2, H / 2 + 36, '这一战没撑住，但经营循环还没结束。', {
+        fontSize: '16px',
+        color: '#ffd8d8',
+        fontFamily: UI_FONT,
+      })
+      .setOrigin(0.5)
+      .setAlpha(0)
+      .setDepth(502);
 
     this.tweens.add({
-      targets: text, alpha: 1, duration: 600,
+      targets: panel,
+      alpha: 1,
+      duration: 400,
+    });
+    this.tweens.add({
+      targets: text,
+      alpha: 1,
+      duration: 600,
+    });
+    this.tweens.add({
+      targets: sub,
+      alpha: 1,
+      duration: 500,
+      delay: 120,
     });
 
     this.time.delayedCall(1800, () => this.exitCombat());
@@ -853,17 +1194,23 @@ export class CombatScene extends Phaser.Scene {
       if (dmg <= 0 || !this.scene.isActive()) return;
       const target = this.enemyContainers[0];
       if (target) {
-        const dmgText = this.add.text(
-          target.x + Phaser.Math.Between(-20, 20),
-          target.y - 40,
-          `-${dmg}`,
-          { fontSize: '26px', color: '#ff2222', fontFamily: 'Courier New', fontStyle: 'bold',
-            stroke: '#000', strokeThickness: 2 },
-        ).setOrigin(0.5).setDepth(200);
+        const dmgText = this.add
+          .text(target.x + Phaser.Math.Between(-20, 20), target.y - 40, `-${dmg}`, {
+            fontSize: '26px',
+            color: '#ff2222',
+            fontFamily: MONO_FONT,
+            fontStyle: 'bold',
+            stroke: '#000',
+            strokeThickness: 2,
+          })
+          .setOrigin(0.5)
+          .setDepth(200);
         this.tweens.add({
           targets: dmgText,
-          y: dmgText.y - 60, alpha: 0,
-          duration: 900, ease: 'Power1',
+          y: dmgText.y - 60,
+          alpha: 0,
+          duration: 900,
+          ease: 'Power1',
           onComplete: () => dmgText.destroy(),
         });
       }
@@ -872,11 +1219,19 @@ export class CombatScene extends Phaser.Scene {
     const onBlock = (amount: unknown) => {
       const val = amount as number;
       if (val <= 0 || !this.scene.isActive()) return;
-      const txt = this.add.text(150, 30, `+${val} 护甲`, {
-        fontSize: '18px', color: '#4488aa', fontFamily: 'Courier New', fontStyle: 'bold',
-      }).setDepth(200);
+      const txt = this.add
+        .text(150, 30, `+${val} 护甲`, {
+          fontSize: '18px',
+          color: '#4488aa',
+          fontFamily: MONO_FONT,
+          fontStyle: 'bold',
+        })
+        .setDepth(200);
       this.tweens.add({
-        targets: txt, y: 0, alpha: 0, duration: 700,
+        targets: txt,
+        y: 0,
+        alpha: 0,
+        duration: 700,
         onComplete: () => txt.destroy(),
       });
     };
@@ -886,12 +1241,22 @@ export class CombatScene extends Phaser.Scene {
       const act = action as string;
       const val = value as number;
       if (act === 'attack' && val > 0) {
-        const txt = this.add.text(W / 2, H / 2 - 40, `-${val}`, {
-          fontSize: '30px', color: '#ff3333', fontFamily: 'Courier New', fontStyle: 'bold',
-          stroke: '#000', strokeThickness: 2,
-        }).setOrigin(0.5).setDepth(200);
+        const txt = this.add
+          .text(W / 2, H / 2 - 40, `-${val}`, {
+            fontSize: '30px',
+            color: '#ff3333',
+            fontFamily: MONO_FONT,
+            fontStyle: 'bold',
+            stroke: '#000',
+            strokeThickness: 2,
+          })
+          .setOrigin(0.5)
+          .setDepth(200);
         this.tweens.add({
-          targets: txt, y: txt.y - 50, alpha: 0, duration: 800,
+          targets: txt,
+          y: txt.y - 50,
+          alpha: 0,
+          duration: 800,
           onComplete: () => txt.destroy(),
         });
       }

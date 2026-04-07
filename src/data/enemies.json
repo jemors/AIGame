@@ -5,10 +5,10 @@
     "maxHp": 35,
     "tier": "normal",
     "intentPattern": [
-      {"type": "ATTACK", "value": 6, "description": "叮咬攻击"},
-      {"type": "ATTACK", "value": 8, "description": "虫群冲击"},
-      {"type": "BUFF_SELF", "value": 2, "description": "召唤更多Bug", "buffId": "buff_strength"},
-      {"type": "ATTACK", "value": 6, "description": "叮咬攻击"}
+      { "type": "ATTACK", "value": 6, "description": "叮咬攻击" },
+      { "type": "ATTACK", "value": 8, "description": "虫群冲击" },
+      { "type": "BUFF_SELF", "value": 2, "description": "召唤更多Bug", "buffId": "buff_strength" },
+      { "type": "ATTACK", "value": 6, "description": "叮咬攻击" }
     ],
     "description": "一群讨厌的Bug，数量多但单个不强。"
   },
@@ -18,9 +18,14 @@
     "maxHp": 28,
     "tier": "normal",
     "intentPattern": [
-      {"type": "ATTACK", "value": 10, "description": "崩溃攻击"},
-      {"type": "DEBUFF_PLAYER", "value": 1, "description": "注入技术债", "buffId": "buff_vulnerable"},
-      {"type": "ATTACK", "value": 7, "description": "段错误"}
+      { "type": "ATTACK", "value": 10, "description": "崩溃攻击" },
+      {
+        "type": "DEBUFF_PLAYER",
+        "value": 1,
+        "description": "注入技术债",
+        "buffId": "buff_vulnerable"
+      },
+      { "type": "ATTACK", "value": 7, "description": "段错误" }
     ],
     "description": "程序员的噩梦，攻击凶猛且会留下技术债。"
   },
@@ -30,10 +35,10 @@
     "maxHp": 45,
     "tier": "normal",
     "intentPattern": [
-      {"type": "DEFEND", "value": 8, "description": "需求膨胀"},
-      {"type": "DEBUFF_PLAYER", "value": 1, "description": "添加新需求", "buffId": "buff_weak"},
-      {"type": "ATTACK", "value": 12, "description": "推翻重来"},
-      {"type": "ATTACK", "value": 8, "description": "需求变更"}
+      { "type": "DEFEND", "value": 8, "description": "需求膨胀" },
+      { "type": "DEBUFF_PLAYER", "value": 1, "description": "添加新需求", "buffId": "buff_weak" },
+      { "type": "ATTACK", "value": 12, "description": "推翻重来" },
+      { "type": "ATTACK", "value": 8, "description": "需求变更" }
     ],
     "description": "不断变化的需求实体化，越拖越强。"
   },
@@ -43,12 +48,17 @@
     "maxHp": 80,
     "tier": "boss",
     "intentPattern": [
-      {"type": "ATTACK", "value": 10, "description": "债务压迫"},
-      {"type": "DEFEND", "value": 12, "description": "债务壁垒"},
-      {"type": "BUFF_SELF", "value": 3, "description": "利滚利", "buffId": "buff_strength"},
-      {"type": "ATTACK", "value": 15, "description": "爆雷"},
-      {"type": "DEBUFF_PLAYER", "value": 2, "description": "系统崩溃", "buffId": "buff_vulnerable"},
-      {"type": "ATTACK", "value": 20, "description": "终极清算"}
+      { "type": "ATTACK", "value": 10, "description": "债务压迫" },
+      { "type": "DEFEND", "value": 12, "description": "债务壁垒" },
+      { "type": "BUFF_SELF", "value": 3, "description": "利滚利", "buffId": "buff_strength" },
+      { "type": "ATTACK", "value": 15, "description": "爆雷" },
+      {
+        "type": "DEBUFF_PLAYER",
+        "value": 2,
+        "description": "系统崩溃",
+        "buffId": "buff_vulnerable"
+      },
+      { "type": "ATTACK", "value": 20, "description": "终极清算" }
     ],
     "passiveAbility": "每回合获得1点力量",
     "description": "最终Boss：累积的技术债务具象化的巨人，每回合都在变强。"

@@ -82,7 +82,11 @@ export class UIManager {
   }
 
   // 显示对话框覆盖层
-  showDialog(title: string, content: string, choices?: { text: string; callback: () => void }[]): void {
+  showDialog(
+    title: string,
+    content: string,
+    choices?: { text: string; callback: () => void }[],
+  ): void {
     const overlay = document.createElement('div');
     overlay.className = 'dialog-overlay fade-in';
 
@@ -93,7 +97,7 @@ export class UIManager {
     if (choices && choices.length > 0) {
       const btnGroup = document.createElement('div');
       btnGroup.style.cssText = 'display:flex;flex-direction:column;gap:8px;';
-      choices.forEach(choice => {
+      choices.forEach((choice) => {
         const btn = document.createElement('button');
         btn.className = 'btn';
         btn.textContent = choice.text;
@@ -124,7 +128,11 @@ export class UIManager {
   // 显示顶部通知
   showNotification(text: string, type: 'info' | 'success' | 'warning' = 'info'): void {
     const notif = document.createElement('div');
-    const colors = { info: 'var(--highlight-blue)', success: 'var(--highlight-green)', warning: 'var(--highlight-red)' };
+    const colors = {
+      info: 'var(--highlight-blue)',
+      success: 'var(--highlight-green)',
+      warning: 'var(--highlight-red)',
+    };
     notif.style.cssText = `
       position:fixed;top:20px;left:50%;transform:translateX(-50%);
       padding:10px 24px;border:2px solid ${colors[type]};border-radius:4px;

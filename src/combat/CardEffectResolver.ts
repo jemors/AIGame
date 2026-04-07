@@ -11,7 +11,6 @@ import type { EnemyInstance } from '../models/Enemy';
 import type { BuffInstance } from '../models/Buff';
 
 export class CardEffectResolver {
-
   // 解析并执行一张卡牌的所有效果
   resolveCard(cardData: CardData, state: CombatState, targetEnemyIndex: number): void {
     // 1. 触发 ON_CARD_PLAY buff
@@ -27,7 +26,6 @@ export class CardEffectResolver {
     this.consumeOnUseBuffs(state, cardData);
 
     eventBus.emit(Events.CARD_PLAYED, cardData.id, cardData.name);
-    state.turn; // 保持引用
   }
 
   private resolveEffect(
@@ -116,7 +114,7 @@ export class CardEffectResolver {
     // 检查死亡
     if (enemy.hp <= 0) {
       // 检查所有敌人是否都死了
-      if (state.enemies.every(e => e.hp <= 0)) {
+      if (state.enemies.every((e) => e.hp <= 0)) {
         state.combatOver = true;
         state.victory = true;
       }
@@ -160,7 +158,7 @@ export class CardEffectResolver {
   }
 
   // --- Buff ---
-  private resolveBuff(effect: CardEffect, state: CombatState, isDebuff: boolean): void {
+  private resolveBuff(effect: CardEffect, state: CombatState, _isDebuff: boolean): void {
     if (!effect.buffId) return;
 
     if (effect.target === TargetType.SELF) {
@@ -178,7 +176,7 @@ export class CardEffectResolver {
     const buffData = kernel.getDataStore().buffs.get(buffId);
     if (!buffData) return;
 
-    const existing = buffs.find(b => b.dataId === buffId);
+    const existing = buffs.find((b) => b.dataId === buffId);
     if (existing && buffData.stackable) {
       existing.stacks = Math.min(buffData.maxStacks, existing.stacks + stacks);
     } else if (!existing) {
@@ -199,11 +197,16 @@ export class CardEffectResolver {
 
   // --- Buff 辅助 ---
   getBuffStacks(buffs: BuffInstance[], buffId: string): number {
-    const b = buffs.find(b => b.dataId === buffId);
+    const b = buffs.find((b) => b.dataId === buffId);
     return b ? b.stacks : 0;
   }
 
-  private triggerBuffs(buffs: BuffInstance[], trigger: string, state: CombatState, cardData?: CardData): void {
+  private triggerBuffs(
+    buffs: BuffInstance[],
+    trigger: string,
+    _state: CombatState,
+    _cardData?: CardData,
+  ): void {
     // 简化处理：通过 trigger 类型执行效果
     for (const buff of buffs) {
       const bd = kernel.getDataStore().buffs.get(buff.dataId);
@@ -218,7 +221,7 @@ export class CardEffectResolver {
   private consumeOnUseBuffs(state: CombatState, cardData: CardData): void {
     // 灵感 buff：攻击后消耗
     if (cardData.type === 'ATTACK') {
-      const idx = state.playerBuffs.findIndex(b => b.dataId === 'buff_inspired');
+      const idx = state.playerBuffs.findIndex((b) => b.dataId === 'buff_inspired');
       if (idx >= 0) {
         state.playerBuffs.splice(idx, 1);
         eventBus.emit(Events.BUFF_REMOVED, 'buff_inspired');

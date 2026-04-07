@@ -106,22 +106,28 @@ function showEventDialog(ui: UIManager, evt: import('./models/GameEvent').GameEv
     const content = `${speaker}${phase.text}`;
 
     if (phase.choices && phase.choices.length > 0) {
-      ui.showDialog(title, content, phase.choices.map(choice => ({
-        text: choice.text,
-        callback: () => {
-          eventSystem.applyChoiceEffects(choice);
-          phaseIndex++;
-          showPhase();
-        },
-      })));
+      ui.showDialog(
+        title,
+        content,
+        phase.choices.map((choice) => ({
+          text: choice.text,
+          callback: () => {
+            eventSystem.applyChoiceEffects(choice);
+            phaseIndex++;
+            showPhase();
+          },
+        })),
+      );
     } else {
-      ui.showDialog(title, content, [{
-        text: '继续',
-        callback: () => {
-          phaseIndex++;
-          showPhase();
+      ui.showDialog(title, content, [
+        {
+          text: '继续',
+          callback: () => {
+            phaseIndex++;
+            showPhase();
+          },
         },
-      }]);
+      ]);
     }
   };
 

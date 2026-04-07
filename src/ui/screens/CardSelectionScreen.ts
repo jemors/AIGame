@@ -18,7 +18,8 @@ export class CardSelectionScreen implements Screen {
 
     const screenDiv = document.createElement('div');
     screenDiv.className = 'screen';
-    screenDiv.style.cssText = 'text-align:center;overflow-y:auto;padding:24px 16px;justify-content:flex-start;';
+    screenDiv.style.cssText =
+      'text-align:center;overflow-y:auto;padding:24px 16px;justify-content:flex-start;';
 
     const wrapper = document.createElement('div');
     wrapper.style.cssText = 'max-width:860px;margin:0 auto;padding-bottom:32px;';
@@ -64,8 +65,8 @@ export class CardSelectionScreen implements Screen {
     const sortedDeck = [...deck].sort((a, b) => {
       const aData = kernel.getDataStore().cards.get(a.dataId);
       const bData = kernel.getDataStore().cards.get(b.dataId);
-      const aIsHeal = aData?.effects.some(e => e.type === 'HEAL') ?? false;
-      const bIsHeal = bData?.effects.some(e => e.type === 'HEAL') ?? false;
+      const aIsHeal = aData?.effects.some((e) => e.type === 'HEAL') ?? false;
+      const bIsHeal = bData?.effects.some((e) => e.type === 'HEAL') ?? false;
       const aType = aIsHeal ? 'HEAL' : (aData?.type ?? 'STATUS');
       const bType = bIsHeal ? 'HEAL' : (bData?.type ?? 'STATUS');
       return (typeOrder[aType] ?? 4) - (typeOrder[bType] ?? 4);
@@ -76,9 +77,17 @@ export class CardSelectionScreen implements Screen {
       const cardData = kernel.getDataStore().cards.get(card.dataId);
       if (!cardData) continue;
 
-      const isHeal = cardData.effects.some(e => e.type === 'HEAL');
-      const cardColor = isHeal ? typeColors.HEAL : (typeColors[cardData.type] || '#999');
-      const cardTypeLabel = isHeal ? '恢复' : (cardData.type === 'ATTACK' ? '攻击' : cardData.type === 'SKILL' ? '技能' : cardData.type === 'POWER' ? '能力' : '状态');
+      const isHeal = cardData.effects.some((e) => e.type === 'HEAL');
+      const cardColor = isHeal ? typeColors.HEAL : typeColors[cardData.type] || '#999';
+      const cardTypeLabel = isHeal
+        ? '恢复'
+        : cardData.type === 'ATTACK'
+          ? '攻击'
+          : cardData.type === 'SKILL'
+            ? '技能'
+            : cardData.type === 'POWER'
+              ? '能力'
+              : '状态';
 
       const cardEl = document.createElement('div');
       cardEl.className = 'card';
@@ -124,7 +133,8 @@ export class CardSelectionScreen implements Screen {
 
     // 如果牌库为空
     if (deck.length === 0) {
-      cardGrid.innerHTML = '<p style="color:var(--ink-light);grid-column:1/-1;text-align:center;">牌库为空</p>';
+      cardGrid.innerHTML =
+        '<p style="color:var(--ink-light);grid-column:1/-1;text-align:center;">牌库为空</p>';
       confirmBtn.textContent = '跳过';
       confirmBtn.disabled = false;
     }

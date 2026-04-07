@@ -13,6 +13,8 @@ export class MonthResultScreen implements Screen {
     const project = state.project!;
     const pData = kernel.getDataStore().projects.get(project.dataId);
     const isLastMonth = project.currentMonth >= (pData?.totalMonths || 3) || state.publishMarked;
+    const healthRatio = project.health / project.maxHealth;
+    const healthColor = project.health > 40 ? 'var(--highlight-green)' : 'var(--highlight-red)';
 
     // Boss战胜利时生成随机奖励buff
     let rewardBuffHtml = '';
@@ -22,49 +24,83 @@ export class MonthResultScreen implements Screen {
         const buffData = kernel.getDataStore().buffs.get(rewardBuffId);
         if (buffData) {
           rewardBuffHtml = `
-            <div class="card" style="margin-bottom:20px;text-align:left;border:2px solid var(--highlight-yellow);">
-              <div style="font-size:13px;color:var(--highlight-yellow);font-weight:bold;margin-bottom:6px;">
-                \u{1F3C6} Boss\u5956\u52B1
+            <section class="result-panel">
+              <div class="result-section-head">
+                <div>
+                  <span class="panel-eyebrow">Boss Reward</span>
+                  <h2>奖励 Buff</h2>
+                </div>
+                <span class="tag positive">\u{1F3C6} 已获得</span>
               </div>
-              <div style="font-size:15px;font-weight:bold;margin-bottom:4px;">
-                ${buffData.name}
-              </div>
-              <div style="font-size:12px;color:var(--ink-medium);">
+              <div class="status-banner is-gold">
+                <strong style="display:block;margin-bottom:6px;color:#8f5a23;">${buffData.name}</strong>
                 ${buffData.description.replace('{stacks}', '1')}\uFF08\u6301\u7EED\u5230\u4E0B\u6708\u672B\uFF09
               </div>
-            </div>
+            </section>
           `;
         }
       }
     }
 
     container.innerHTML = `
-      <div class="screen" style="text-align:center;">
-        <div style="max-width:500px;">
-          <h2 class="title-decoration" style="font-family:var(--font-title);font-size:36px;margin-bottom:16px;">
-            \u6218\u6597\u7ED3\u7B97
-          </h2>
-          <p style="font-size:16px;color:var(--ink-medium);margin-bottom:24px;">
-            ${project.health > 0 ? '\u6210\u529F\u6E21\u8FC7\u4E86\u8FD9\u4E2A\u6708\u7684\u6311\u6218\uFF01' : '\u9879\u76EE\u53D7\u5230\u4E86\u91CD\u521B\uFF0C\u4F46\u8FD8\u53EF\u4EE5\u7EE7\u7EED...'}
-          </p>
+      <div class="screen result-screen">
+        <div class="result-shell">
+          <aside class="result-side">
+            <section class="result-panel result-hero ${project.health > 0 ? 'is-success' : 'is-danger'}">
+              <span class="panel-eyebrow" style="color:rgba(255,237,211,0.72);">Boss Resolution</span>
+              <h1>战斗结算</h1>
+              <p>
+                ${
+                  project.health > 0
+                    ? '你已经挺过这个月最关键的一战。接下来要决定是迈向下一个月，还是直接进入项目发售结算。'
+                    : '这一战代价很高，但项目还没完全结束。剩下的每一步都要更克制地推进。'
+                }
+              </p>
+              <div class="result-metric-list">
+                <span class="ops-chip">项目健康 <strong>${project.health}/${project.maxHealth}</strong></span>
+                <span class="ops-chip">当前月份 <strong>${project.currentMonth}</strong></span>
+                <span class="ops-chip">下一步 <strong>${isLastMonth ? '项目结算' : `进入第${project.currentMonth + 1}月`}</strong></span>
+              </div>
+            </section>
+          </aside>
 
-          <div class="card" style="margin-bottom:20px;text-align:left;">
-            <div style="display:flex;justify-content:space-between;font-size:14px;margin-bottom:8px;">
-              <span>\u9879\u76EE\u5065\u5EB7\u5EA6</span>
-              <span class="value" style="color:${project.health > 40 ? 'var(--highlight-green)' : 'var(--highlight-red)'};">
-                ${project.health} / ${project.maxHealth}
-              </span>
-            </div>
-            <div class="progress-bar">
-              <div class="fill" style="width:${(project.health / project.maxHealth) * 100}%;background:${project.health > 40 ? 'var(--highlight-green)' : 'var(--highlight-red)'};"></div>
-            </div>
-          </div>
+          <main class="result-main">
+            <section class="result-panel">
+              <div class="result-section-head">
+                <div>
+                  <span class="panel-eyebrow">Health Report</span>
+                  <h2>项目健康度</h2>
+                </div>
+                <span class="tag info">Month ${project.currentMonth}</span>
+              </div>
+              <div class="status-banner">
+                月末战斗的结果会直接决定你下一轮经营的容错空间。状态越差，后续任何一次高风险推进都会更难承受。
+              </div>
+              <div style="margin-top:14px;">
+                <div class="metric-label" style="margin-bottom:8px;">
+                  <span>项目健康度</span>
+                  <span class="metric-value" style="color:${healthColor};">${project.health} / ${project.maxHealth}</span>
+                </div>
+                <div class="progress-bar">
+                  <div class="fill" style="width:${healthRatio * 100}%;background:${healthColor};"></div>
+                </div>
+              </div>
+            </section>
 
-          ${rewardBuffHtml}
+            ${rewardBuffHtml}
 
-          <button id="btn-next" class="btn btn-primary" style="font-size:18px;padding:12px 32px;">
-            ${isLastMonth ? '\u9879\u76EE\u7ED3\u7B97' : '\u8FDB\u5165\u7B2C' + (project.currentMonth + 1) + '\u4E2A\u6708'}
-          </button>
+            <section class="result-panel">
+              <div class="result-action-row">
+                <div>
+                  <div class="panel-eyebrow">Next Step</div>
+                  <p class="result-action-note">${isLastMonth ? '这是项目循环的最后一步，下一页将进入发售结算。' : '继续下个月前，先确认你是否还能承受当前的项目状态。'}</p>
+                </div>
+                <button id="btn-next" class="btn btn-primary" style="min-width:220px;">
+                  ${isLastMonth ? '项目结算' : `进入第${project.currentMonth + 1}个月`}
+                </button>
+              </div>
+            </section>
+          </main>
         </div>
       </div>
     `;

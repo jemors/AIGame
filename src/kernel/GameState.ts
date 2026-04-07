@@ -61,11 +61,11 @@ export interface GameState {
 
   // 日常状态
   daily: {
-    currentDay: number;     // 当月第几天
-    currentWeek: number;    // 当前第几周 (1-4)
+    currentDay: number; // 当月第几天
+    currentWeek: number; // 当前第几周 (1-4)
     currentSlot: TimeSlot;
     activitiesThisDay: string[]; // 今天已执行的活动 ID
-    cardsGainedToday: string[];  // 今天获得的卡牌 ID
+    cardsGainedToday: string[]; // 今天获得的卡牌 ID
   };
 
   // 已触发事件 ID

@@ -3,7 +3,6 @@
 // ========================================
 
 import { kernel } from '../../kernel/GameKernel';
-import { GamePhase } from '../../models/types';
 import type { EquipmentData } from '../../models/Equipment';
 import type { Screen } from '../UIManager';
 
@@ -57,7 +56,8 @@ export class EquipmentSelectionScreen implements Screen {
 
     const screenDiv = document.createElement('div');
     screenDiv.className = 'screen';
-    screenDiv.style.cssText = 'text-align:center;overflow-y:auto;padding:24px 16px;justify-content:flex-start;';
+    screenDiv.style.cssText =
+      'text-align:center;overflow-y:auto;padding:24px 16px;justify-content:flex-start;';
 
     const wrapper = document.createElement('div');
     wrapper.style.cssText = 'max-width:700px;margin:0 auto;';
@@ -108,7 +108,7 @@ export class EquipmentSelectionScreen implements Screen {
 
       card.addEventListener('click', () => {
         // 取消之前的选择
-        cardElements.forEach(el => {
+        cardElements.forEach((el) => {
           el.style.borderColor = 'var(--pencil-line)';
           el.style.background = '';
           el.style.boxShadow = '';
@@ -132,10 +132,12 @@ export class EquipmentSelectionScreen implements Screen {
     if (state.equipments.length > 0) {
       const ownedDiv = document.createElement('div');
       ownedDiv.style.cssText = 'margin-bottom:20px;font-size:12px;color:var(--ink-light);';
-      const ownedNames = state.equipments.map(e => {
-        const d = kernel.getDataStore().equipments.get(e.dataId);
-        return d ? `${TYPE_ICONS[d.type] || ''} ${d.name}` : e.dataId;
-      }).join('\u3001');
+      const ownedNames = state.equipments
+        .map((e) => {
+          const d = kernel.getDataStore().equipments.get(e.dataId);
+          return d ? `${TYPE_ICONS[d.type] || ''} ${d.name}` : e.dataId;
+        })
+        .join('\u3001');
       ownedDiv.textContent = `\u5DF2\u62E5\u6709\u88C5\u5907\uFF1A${ownedNames}`;
       wrapper.appendChild(ownedDiv);
     }
@@ -157,7 +159,8 @@ export class EquipmentSelectionScreen implements Screen {
     // 跳过按钮
     const skipBtn = document.createElement('button');
     skipBtn.className = 'btn';
-    skipBtn.style.cssText = 'font-size:13px;padding:8px 20px;margin-top:12px;display:block;margin-left:auto;margin-right:auto;color:var(--ink-light);';
+    skipBtn.style.cssText =
+      'font-size:13px;padding:8px 20px;margin-top:12px;display:block;margin-left:auto;margin-right:auto;color:var(--ink-light);';
     skipBtn.textContent = '\u8DF3\u8FC7';
     skipBtn.addEventListener('click', () => {
       kernel.finishEquipmentSelection();

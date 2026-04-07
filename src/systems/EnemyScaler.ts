@@ -8,7 +8,6 @@ import type { EnemyData, EnemyInstance, EnemyIntent } from '../models/Enemy';
 import type { BuffInstance } from '../models/Buff';
 
 export class EnemyScaler {
-
   // 根据月份和周数生成每周战斗的敌人
   generateWeeklyEnemies(
     monthNumber: number,
@@ -32,7 +31,7 @@ export class EnemyScaler {
 
     // 收集所有普通级敌人模板
     const normalEnemies: EnemyData[] = [];
-    dataStore.enemies.forEach(e => {
+    dataStore.enemies.forEach((e) => {
       if (!e.tier || e.tier === 'normal') {
         normalEnemies.push(e);
       }
@@ -62,7 +61,7 @@ export class EnemyScaler {
     if (!bossData) {
       // 回退：使用任意boss级敌人
       const fallback: EnemyData[] = [];
-      dataStore.enemies.forEach(e => {
+      dataStore.enemies.forEach((e) => {
         if (e.tier === 'boss') fallback.push(e);
       });
       if (fallback.length === 0) return [];
@@ -81,7 +80,7 @@ export class EnemyScaler {
 
     if (!bossData) {
       const fallback: EnemyData[] = [];
-      dataStore.enemies.forEach(e => {
+      dataStore.enemies.forEach((e) => {
         if (e.tier === 'boss') fallback.push(e);
       });
       if (fallback.length === 0) return [];
@@ -98,7 +97,7 @@ export class EnemyScaler {
     const scaledHp = Math.round(template.maxHp * multiplier);
 
     // 缩放行为序列的数值
-    const scaledIntents: EnemyIntent[] = template.intentPattern.map(intent => ({
+    const scaledIntents: EnemyIntent[] = template.intentPattern.map((intent) => ({
       ...intent,
       value: Math.round(intent.value * multiplier),
     }));

@@ -20,7 +20,7 @@ export class EventBus {
   }
 
   emit(event: string, ...args: unknown[]): void {
-    this.listeners.get(event)?.forEach(handler => {
+    this.listeners.get(event)?.forEach((handler) => {
       try {
         handler(...args);
       } catch (e) {
